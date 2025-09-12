@@ -5,30 +5,31 @@ import Image from "next/image"
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 z-50 bg-[#0B0E17]/90 backdrop-blur border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Logo a sinistra */}
-        <Link href="/" className="flex items-center">
+    <nav className="sticky top-0 z-50 bg-[#0B0E17]/90 backdrop-blur-md border-b border-white/10 shadow-lg">
+      <div className="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+        {/* Logo a sinistra - Più grande e centrato */}
+        <Link href="/" className="flex items-center transition-all duration-300 hover:scale-105">
           <Image
             src="/logo.svg"
             alt="PalqOn Logo"
-            width={140}
-            height={40}
+            width={180}
+            height={50}
             priority
+            className="object-contain"
           />
         </Link>
 
-        {/* Bottoni a destra */}
-        <div className="flex gap-4">
+        {/* Bottoni a destra - Stile creativo e staccati */}
+        <div className="flex gap-6 items-center">
           <Link
             href="/auth/login"
-            className="bg-[#007BFF] hover:bg-[#00AFFF] text-white px-5 py-2 rounded-lg shadow transition"
+            className="bg-gradient-to-r from-[#007BFF] to-[#00AFFF] hover:from-[#00AFFF] hover:to-[#007BFF] text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 transform"
           >
             LOGIN
           </Link>
           <Link
             href="/auth/register"
-            className="bg-[#FF006E] hover:bg-[#FF4DA0] text-white px-5 py-2 rounded-lg shadow transition"
+            className="bg-gradient-to-r from-[#FF006E] via-[#FF4DA0] to-[#FF80BF] hover:from-[#FF80BF] hover:via-[#FF4DA0] hover:to-[#FF006E] text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 transform"
           >
             VUOI DIVENTARE UN SELLER?
           </Link>

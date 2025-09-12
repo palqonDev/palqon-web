@@ -16,9 +16,11 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="it">
-      <body className={poppins.className}>
+      <body className={`${poppins.className} overflow-x-hidden`}>
         <Navbar />
-        <main>{children}</main>
+        <div className="w-full max-w-7xl mx-auto px-4">
+          <main className="w-full">{children}</main>
+        </div>
       </body>
     </html>
   )
