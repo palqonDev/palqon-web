@@ -1,26 +1,25 @@
-import "./globals.css"
-import { ReactNode } from "react"
-import { Poppins } from "next/font/google"
-import Navbar from "../components/Navbar"
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-})
+import './globals.css'
+import Navbar from '@/components/Navbar'
+import Script from "next/script"
 
 export const metadata = {
-  title: "PalqOn",
-  description: "Booking Service per eventi",
+  title: 'PalqOn',
+  description: 'Booking Service per eventi',
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="it">
-      <body className={`${poppins.className} overflow-x-hidden`}>
+      <head>
+        {/* Script Google Maps */}
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="beforeInteractive"
+        />
+      </head>
+      <body>
         <Navbar />
-        <div className="w-full max-w-7xl mx-auto px-4">
-          <main className="w-full">{children}</main>
-        </div>
+        <main className="main-wrapper">{children}</main>
       </body>
     </html>
   )

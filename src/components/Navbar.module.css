@@ -1,0 +1,236 @@
+.nav {
+  backdrop-filter: blur(8px);
+  background-color: rgba(15, 23, 42, 0.75);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 0.75rem 1.5rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.logoImage {
+  height: 60px;
+  width: auto;
+}
+
+.links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  transition: all 0.3s ease;
+}
+
+.links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.links li a:hover {
+  color: #00afff;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.login {
+  color: #cbd5e1;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.login:hover {
+  color: white;
+}
+
+.register {
+  background: linear-gradient(to right, #007bff, #00afff);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.register:hover {
+  transform: scale(1.05);
+}
+
+.menuToggle {
+  display: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: white;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00afff;
+}
+
+/* Dropdown */
+.dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: #1e293b;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 100;
+
+  /* restringe al contenuto */
+  width: auto;
+  min-width: fit-content;
+  white-space: nowrap;
+
+  /* animazione */
+  animation: dropdownFade 0.2s ease forwards;
+}
+
+.dropdown a,
+.dropdown button {
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.dropdown a:hover,
+.dropdown button:hover {
+  background: #334155;
+  color: #00afff;
+}
+
+.greeting {
+  font-weight: 500;
+  color: white;
+}
+
+.arrow {
+  margin-left: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.faq {
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faqIcon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.faqIcon:hover {
+  background: #334155;
+}
+
+.selectors {
+  margin-left: auto;
+  margin-right: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.selector {
+  background: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+}
+
+.newsTicker {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  margin: 0 2rem;
+  position: relative;
+}
+
+.tickerContent {
+  display: inline-block;
+  padding-left: 100%;
+  animation: ticker 25s linear infinite;
+}
+
+.tickerContent span {
+  margin-right: 3rem;
+  font-size: 0.9rem;
+  color: #fff;
+  opacity: 0.85;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Animazione apertura dropdown */
+@keyframes dropdownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

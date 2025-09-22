@@ -1,0 +1,1009 @@
+/* --- DASHBOARD --- */
+.sellerDashboard {
+  background: #0f172a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  color: white;
+}
+
+/* --- HEADER --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.addBtn {
+  background: #00afff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+.addBtn:hover { background: #0284c7; }
+
+.editBtn {
+  background-color: #3b82f6; /* blu */
+  color: #fff;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.editBtn:hover {
+  background-color: #2563eb;
+}
+
+
+/* --- LISTA COMPONENTI --- */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.componentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* --- CARD --- */
+.componentCard {
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.componentCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+}
+
+.inactiveCard {
+  border: 2px solid #dc2626;
+  opacity: 0.8;
+}
+
+/* --- TITOLO SOPRA --- */
+.componentTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #00afff;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+/* --- GRIGLIA 4 COLONNE --- */
+.cardGrid {
+  display: grid;
+  grid-template-columns: 220px 300px 335px 150px;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* --- COLONNA 1: IMMAGINE --- */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.componentImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.placeholder {
+  color: #64748b;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Frecce carousel */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 5;
+}
+.arrow:hover { background: rgba(0,0,0,0.7); }
+.arrow.left { left: 8px; }
+.arrow.right { right: 8px; }
+
+/* --- COLONNA 2: INFO --- */
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.infoRow {
+  margin: 0.0.5rem 0;
+  display: flex;
+  gap: 0.3rem;
+}
+.label { font-weight: 600; color: #cbd5e1; }
+.value { color: #f1f5f9; }
+
+/* --- COLONNA 3: DESCRIZIONE --- */
+.descriptionColumn {
+  max-width: 400px;
+  max-height: 220px;
+  text-align: justify;
+  word-wrap: break-word;
+  overflow-y: auto;
+}
+.descriptionColumn p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+  margin-top: 0.3rem;
+}
+
+/* --- COLONNA 4: BADGES + TAG + PREZZI --- */
+.priceTagColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+/* Contenitore badge sotto il tag */
+.badgesUnder {
+  display: flex;
+  gap: 0.3rem;
+  width: 100%;
+}
+
+.badge {
+  flex: 1;
+  text-align: center;
+  background: #334155;
+  color: #f1f5f9;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+/* Tag categoria */
+.categoryTagWrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.categoryTag {
+  flex: 1;
+  text-align: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.tag-PALCO { background: #f97316; color: #1e293b; }   /* arancione */
+.tag-LUCI { background: #facc15; color: #1e293b; }
+.tag-AUDIO { background: #4ade80; color: #1e293b; }
+.tag-DJ { background: #f472b6; }
+.tag-ALTRO { background: #94a3b8; }
+.tag-BUNDLE { background: #8b5cf6; color: #fff; }     /* viola */
+
+/* Prezzi */
+.priceBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: 6rem;
+}
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.originalPrice {
+  font-size: 0.9rem;
+  color: #ef4444;
+  text-decoration: line-through;
+}
+.discountedPrice {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #00afff;
+}
+.priceNote {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* --- AZIONI SOTTO LA CARD --- */
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+/* Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 42px;
+  height: 22px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #dc2626;
+  transition: .4s;
+  border-radius: 22px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+.switch input:checked + .slider { background-color: #22c55e; }
+.switch input:checked + .slider:before { transform: translateX(20px); }
+
+.statusLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin: 0 0.5rem;
+}
+
+/* --- MODAL --- */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2000;
+}
+.modal {
+  background: #1e293b;
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.25s ease;
+}
+.closeBtn {
+  position: absolute; top: 10px; right: 15px;
+  background: none; border: none;
+  font-size: 1.5rem; color: #fff; cursor: pointer;
+}
+
+.modalTitle {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #00afff;
+}
+
+/* Form a 3 colonne */
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.formGrid3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.formColumn input,
+.formColumn select,
+.textareaStyled {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 0.9rem;
+}
+.formColumn input:focus,
+.formColumn select:focus,
+.textareaStyled:focus {
+  border: 1px solid #00afff;
+  outline: none;
+  background: #1e293b;
+}
+
+/* Bottone centrato */
+.modalButtonWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.modalButtonWrapper button {
+  background: #00afff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+.modalButtonWrapper button:hover { background: #0284c7; }
+
+/* Textarea */
+.textareaStyled {
+  width: 100%;
+  min-height: 120px;
+  resize: vertical;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 0.9rem;
+}
+.textareaStyled:focus {
+  border: 1px solid #00afff;
+  outline: none;
+  background: #1e293b;
+}
+
+/* Checkbox */
+.checkboxRow {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* Upload file */
+
+
+.uploadBtn {
+  display: inline-block;      /* si adatta al contenuto */
+  margin: 1rem auto 0 auto;   /* auto a sinistra/destra = centrato */
+  background-color: #22c55e;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;     /* regola la grandezza */
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.uploadBtn:hover {
+  background-color: #16a34a;
+}
+
+
+
+/* Anteprima immagini */
+.preview {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+.previewImgWrapper {
+  position: relative;
+  display: inline-block;
+}
+.previewImg {
+  border: 2px solid #334155;
+  border-radius: 6px;
+  margin-right: 0.4rem;
+  margin-bottom: 0.4rem;
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+}
+.removeImgBtn {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+.removeImgBtn:hover {
+  background: rgba(220, 38, 38, 0.8);
+}
+
+/* Animazione */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- CATEGORY TABS --- */
+.categoryTabs {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+.categoryTab {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  background: #334155;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.categoryTab:hover {
+  background: #475569;
+  transform: translateY(-2px);
+}
+.activeTab { box-shadow: 0 0 12px rgba(0, 0, 0, 0.6); }
+
+/* Colori attivi coerenti alle categorie */
+.categoryTab.activeTab:nth-child(1) { background: #9333ea; } /* PALCO */
+.categoryTab.activeTab:nth-child(2) { background: #facc15; color:#000; } /* LUCI */
+.categoryTab.activeTab:nth-child(3) { background: #00afff; } /* AUDIO */
+.categoryTab.activeTab:nth-child(4) { background: #ff006e; } /* DJ */
+.categoryTab.activeTab:nth-child(5) { background: #64748b; } /* ALTRO */
+
+.radioGroup {
+  display: flex;
+  gap: 1rem;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.radioGroup label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+
+/* Zona filtraggio */
+/* --- TOOLBAR FILTRI + SEARCH --- */
+.toolbar {
+  display: flex;
+  flex-direction: column;   /* due righe */
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+/* Riga 1: search bar hero */
+.toolbarTop {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.searchInput {
+  flex: 1;
+  max-width: 600px;          /* larghezza massima al centro */
+  padding: 0.8rem 1.2rem;
+  border: 1px solid #334155;
+  border-radius: 9999px;      /* pill shape */
+  font-size: 1rem;
+  background: #0f172a;
+  color: #f1f5f9;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+/* Riga 2: filtri */
+.toolbarBottom {
+  display: flex;
+  flex-wrap: wrap;         /* così va a capo solo se non c’è spazio */
+  gap: 0.8rem;
+  justify-content: center; /* centrati */
+  align-items: center;
+}
+
+.selectStyled,
+.priceInput {
+  padding: 0.6rem 1rem;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #1e293b;
+  color: #f1f5f9;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+/* Input numerici */
+.priceInput {
+  width: 120px;
+}
+
+/* Checkbox custom */
+.checkLabel {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+/* input invisibile ma cliccabile */
+.checkLabel input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* quadratino custom */
+.customCheck {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #334155;
+  border-radius: 4px;
+  background: #0f172a;
+  transition: all 0.2s;
+  display: inline-block;
+  position: relative;
+}
+
+/* segno di spunta */
+.customCheck::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 4px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* quando l’input è spuntato → cambia background e mostra il segno */
+.checkLabel input:checked ~ .customCheck {
+  background: #00afff;
+  border-color: #00afff;
+}
+
+.checkLabel input:checked ~ .customCheck::after {
+  display: block;
+}
+
+
+
+/* Pulsante reset */
+.resetBtn {
+  background-color: #ef4444;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.resetBtn:hover {
+  background-color: #dc2626;
+}
+
+
+
+.bundleBtn {
+  background: #8b5cf6; /* viola */
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+.bundleBtn:hover {
+  background: #7c3aed;
+}
+
+/* --- MODAL BUNDLE --- */
+.bundleSearch {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Corpo del modal con due colonne */
+.bundleBody {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* Colonna sinistra (componenti disponibili) */
+.bundleAvailable {
+  flex: 2;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+/* Colonna destra (componenti selezionati, sempre visibile) */
+.bundleSelected {
+  flex: 1;
+  max-height: 400px;
+  overflow-y: auto;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.8rem;
+  color: #f1f5f9;
+}
+
+.bundleSelected h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  color: #38bdf8;
+}
+
+.selectedListUl {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.selectedListItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #334155;
+  font-size: 0.85rem;
+}
+
+.selectedListItem:last-child {
+  border-bottom: none;
+}
+
+.selectedListItem button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.selectedListItem button:hover {
+  background: #dc2626;
+}
+
+/* Lista componenti disponibili (colonna sinistra) */
+.bundleGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.bundleCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.bundleCard:hover {
+  background: #273449;
+  transform: translateY(-2px);
+}
+
+.bundleCard img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-right: 0.8rem;
+  flex-shrink: 0;
+}
+
+.bundleCard h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.bundleCard p {
+  margin: 0.2rem 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.bundleCard label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+/* Tag colorati come nelle card normali */
+.categoryTag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.tag-PALCO { background: #f97316; color: #1e293b; }   /* arancione */
+.tag-LUCI { background: #facc15; color: #1e293b; }
+.tag-AUDIO { background: #4ade80; color: #1e293b; }
+.tag-DJ { background: #f472b6; }
+.tag-ALTRO { background: #94a3b8; }
+.tag-BUNDLE { background: #8b5cf6; color: #fff; }     /* viola */
+
+/* Totali del bundle */
+.bundleTotals {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #1e293b;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.bundleTotals p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.bundleTotals label {
+  display: block;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+/* Input e textarea bundle */
+.bundleForm input,
+.bundleForm textarea {
+  padding: 0.5rem;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.bundleForm textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Bottone upload centrato */
+.uploadBtn {
+  display: block;
+  margin: 1rem auto;
+  background-color: #22c55e;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+.uploadBtn:hover {
+  background-color: #16a34a;
+}
+
+/* --- SCROLLBAR SCURA (globale) --- */
+.modal::-webkit-scrollbar,
+.bundleGrid::-webkit-scrollbar,
+.bundleSelected::-webkit-scrollbar,
+.grid::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.modal::-webkit-scrollbar-track,
+.bundleGrid::-webkit-scrollbar-track,
+.bundleSelected::-webkit-scrollbar-track,
+.grid::-webkit-scrollbar-track {
+  background: #0f172a;
+  border-radius: 8px;
+}
+
+.modal::-webkit-scrollbar-thumb,
+.bundleGrid::-webkit-scrollbar-thumb,
+.bundleSelected::-webkit-scrollbar-thumb,
+.grid::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  border-radius: 8px;
+  border: 2px solid #0f172a;
+}
+
+.modal::-webkit-scrollbar-thumb:hover,
+.bundleGrid::-webkit-scrollbar-thumb:hover,
+.bundleSelected::-webkit-scrollbar-thumb:hover,
+.grid::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+/* Firefox */
+.modal,
+.bundleGrid,
+.bundleSelected,
+.grid {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 #0f172a;
+}
+
+/* --- GRIGLIA A 3 COLONNE --- */
+.bundleGrid3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Input bundle e prezzi */
+.bundleForm input,
+.bundleForm textarea,
+.bundleTotals input {
+  padding: 0.5rem;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+/* Lista componenti disponibili con stesso stile della selezione */
+.bundleGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+
+.bundleCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0f172a;           /* uguale ai selezionati */
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+/* Checkbox personalizzati */
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #f1f5f9;
+}
+
+.checkboxStyled {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #38bdf8;
+  border-radius: 4px;
+  background: transparent;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkboxStyled:checked {
+  background-color: #38bdf8;
+}
+
+.checkboxStyled:checked::after {
+  content: "✔";
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.deleteBtn {
+  background-color: #ef4444; /* rosso */
+  color: #fff;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #dc2626; /* rosso più scuro */
+}
+

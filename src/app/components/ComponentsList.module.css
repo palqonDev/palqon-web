@@ -1,0 +1,369 @@
+/* --- CONTAINER --- */
+.container {
+  background: #0f172a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- TITLE --- */
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #00afff;
+}
+
+/* --- LOADING / NO RESULTS --- */
+.loading,
+.noResults {
+  text-align: center;
+  color: #94a3b8;
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+/* --- TOOLBAR FILTRI --- */
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 1rem 0 2rem 0;
+}
+
+.toolbarTop {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.searchInput {
+  flex: 1;
+  max-width: 600px;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid #334155;
+  border-radius: 9999px;
+  font-size: 1rem;
+  background: #0f172a;
+  color: #f1f5f9;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+
+.toolbarBottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.selectStyled,
+.priceInput {
+  padding: 0.6rem 1rem;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #1e293b;
+  color: #f1f5f9;
+  cursor: pointer;
+  min-width: 130px;
+}
+
+.priceInput {
+  width: 120px;
+}
+
+/* --- LISTA RISULTATI --- */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem; /* compatto tra le card */
+}
+
+/* --- CARD COMPONENTE --- */
+.componentCard {
+  background: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.componentCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.45);
+}
+
+.noUnderline {
+  text-decoration: none;
+}
+
+.componentTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #00afff;
+  margin: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.componentTitle:hover {
+  color: #38bdf8;
+}
+
+/* --- GRIGLIA INTERNA (4 COLONNE) --- */
+.cardGrid {
+  display: grid;
+  grid-template-columns: 220px 280px 1fr 300px;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* --- COLONNA 1: IMMAGINE --- */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.componentImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.componentImg:hover {
+  transform: scale(1.03);
+}
+
+.placeholder {
+  color: #64748b;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* --- COLONNA 2: INFO --- */
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem; /* più compatto */
+  font-size: 0.9rem;
+}
+
+.infoColumn p {
+  margin: 0.1rem 0;
+}
+
+.label {
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.value {
+  color: #f1f5f9;
+}
+
+/* --- COLONNA 3: DESCRIZIONE --- */
+.descriptionColumn {
+  max-height: 220px;
+  text-align: justify;
+  word-wrap: break-word;
+  overflow-y: auto;
+}
+.descriptionColumn p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.descriptionColumn .label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+/* --- COLONNA 4: PREZZI + TAG + BADGE + SELLER --- */
+.priceTagColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.categoryTagWrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.categoryTag {
+  text-align: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #fff;
+}
+
+/* colori tag categoria */
+.tag-PALCO { background: #f97316; color: #1e293b; }
+.tag-LUCI { background: #facc15; color: #1e293b; }
+.tag-AUDIO { background: #4ade80; color: #1e293b; }
+.tag-DJ { background: #f472b6; }
+.tag-ALTRO { background: #94a3b8; }
+.tag-BUNDLE { background: #8b5cf6; color: #fff; }
+
+.badgesUnder {
+  display: flex;
+  gap: 0.2rem;
+  padding-bottom: 0.5rem;
+}
+
+.badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  background: #334155;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+/* --- PREZZI --- */
+.priceBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;margin-top: 1rem;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.originalPrice {
+  font-size: 0.9rem;
+  color: #ef4444;
+  text-decoration: line-through;
+}
+
+.discountedPrice {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #00afff;
+}
+
+.priceNote {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* --- BOTTONE VERIFICA DISPONIBILITÀ --- */
+.verifyBtn {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.7rem;
+  background: #00afff;
+  color: white;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.verifyBtn:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+}
+
+/* --- SELLER PROFILO (referente + rating inline) --- */
+.sellerProfile {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-decoration: none;
+  color: #f1f5f9;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.sellerAvatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #00afff;
+}
+
+.sellerName {
+  color: #f1f5f9;
+}
+
+.reviewsInline {
+  font-size: 0.8rem;
+  color: #fbbf24; /* giallo stella */
+  font-weight: 600;
+  margin-left: 0.5rem; /* più vicino al nome */
+}
+
+/* --- SCROLLBAR DARK --- */
+.descriptionColumn::-webkit-scrollbar {
+  width: 6px;
+}
+
+.descriptionColumn::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.descriptionColumn::-webkit-scrollbar-thumb {
+  background-color: #334155;
+  border-radius: 8px;
+}
+
+.descriptionColumn::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+.verifyBtnInline {
+  font-size: 0.8rem;
+  padding: 0.35rem 0.7rem;
+  background: #00afff;
+  color: white;
+  font-weight: 500;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  margin-right: 0.5rem; /* spazio tra bottone e prezzo */
+}
+
+.verifyBtnInline:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+}
+

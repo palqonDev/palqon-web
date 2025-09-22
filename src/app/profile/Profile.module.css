@@ -1,0 +1,515 @@
+/* Contenitore principale */
+.container {
+  padding: 2rem;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* HEADER PROFILO */
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.avatarBig {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00afff;
+}
+
+.uploadBtn {
+  display: inline-block;
+  margin-top: 0.75rem;
+  background: #334155;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+.uploadBtn:hover {
+  background: #475569;
+}
+
+/* SEZIONE CLIENT */
+.clientBox {
+  background: #0f172a;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+
+/* FORM PROFILO E SELLER */
+.profileForm,
+.sellerForm {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.profileForm input,
+.profileForm textarea,
+.profileForm select,
+.sellerForm input,
+.sellerForm textarea {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 0.95rem;
+  transition: border 0.2s ease, background 0.2s ease;
+}
+.profileForm input:focus,
+.profileForm textarea:focus,
+.profileForm select:focus,
+.sellerForm input:focus,
+.sellerForm textarea:focus {
+  border: 1px solid #00afff;
+  outline: none;
+  background: #1e293b;
+}
+
+.profileForm button,
+.sellerForm button {
+  background: #00afff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.profileForm button:hover,
+.sellerForm button:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+}
+
+/* GRUPPI CAMPI SELLER (fieldset) */
+.fieldGroup {
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  background: #1e293b;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+}
+.fieldGroup legend {
+  font-weight: 600;
+  color: #00afff;
+  padding: 0 0.5rem;
+  font-size: 1rem;
+}
+.fieldGroup label {
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+  display: block;
+  font-weight: 500;
+  color: #e2e8f0;
+}
+
+/* CHECKBOX GRUPPO CATEGORIE */
+.checkGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.checkGroup label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  background: #0f172a;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  transition: background 0.2s ease, border 0.2s ease;
+}
+.checkGroup label:hover {
+  background: #1e293b;
+  border: 1px solid #00afff;
+}
+.checkGroup input {
+  accent-color: #00afff;
+  width: 18px;
+  height: 18px;
+}
+
+/* SUPPORTO */
+.supportBox {
+  margin: 2rem 0;
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+.supportBox h3 {
+  margin-bottom: 1rem;
+}
+.supportBox a {
+  color: #00afff;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.supportBox a:hover {
+  text-decoration: underline;
+}
+
+/* SELLER DASHBOARD */
+.sellerDashboard {
+  background: #0f172a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+/* GRID A DUE COLONNE */
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rightCol {
+  background: #0f172a;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+}
+.rightCol h3 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+/* CARD SELLER */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background: #1e293b;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+.card strong {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  color: #00afff;
+}
+
+/* BLOCCO GENERICO */
+.block {
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 10px;
+}
+.block h3 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.block ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.block ul li {
+  margin-bottom: 0.5rem;
+}
+.block a {
+  color: #00afff;
+  font-size: 0.9rem;
+}
+.block a:hover {
+  text-decoration: underline;
+}
+
+/* QUICK ACTIONS */
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.quickActions .addBtn {
+  flex: 1;
+  min-width: 150px;
+  text-align: center;
+}
+
+.addBtn {
+  background: #00afff;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.2s ease;
+  display: inline-block;
+}
+.addBtn:hover {
+  background: #0284c7;
+}
+
+/* TIMELINE ATTIVITÀ RECENTE */
+.block ul li strong {
+  margin-right: 0.4rem;
+  font-size: 1.1rem;
+}
+
+/* MODAL */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal {
+  background: #1e293b;
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.25s ease;
+}
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* FILE UPLOAD */
+.fileInput {
+  display: inline-block;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: center;
+  transition: background 0.2s ease;
+}
+.fileInput:hover { background: #16a34a; }
+.profileForm input[type="file"] { display: none; }
+
+.placesList {
+  margin-top: 0.5rem;
+  padding: 0;
+  list-style: none;
+  background: #1e293b;
+  border-radius: 8px;
+  border: 1px solid #334155;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  position: absolute;
+}
+
+.placeItem {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  color: #e2e8f0;
+}
+.placeItem:hover {
+  background: #334155;
+}
+
+/* Overlay scuro dietro al modal */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Contenitore principale modal */
+.modal {
+  background: #1e293b; /* blu scuro coerente col resto */
+  border-radius: 16px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  color: #f1f5f9;
+  position: relative;
+}
+
+/* Titolo */
+.modal h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Pulsante chiusura */
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  color: #f1f5f9;
+  font-size: 1.3rem;
+  cursor: pointer;
+}
+.closeBtn:hover {
+  color: #38bdf8;
+}
+
+/* Tabs categoria */
+.categoryTabs {
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+.categoryTab {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #f1f5f9;
+  background: #334155;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.categoryTab:hover {
+  background: #475569;
+  transform: translateY(-2px);
+}
+.activeTab {
+  background: #0ea5e9;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
+}
+
+/* Form campi */
+.sellerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sellerForm label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #cbd5e1;
+}
+.sellerForm input,
+.sellerForm select,
+.sellerForm textarea {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #f1f5f9;
+  font-size: 0.95rem;
+}
+.sellerForm input:focus,
+.sellerForm select:focus,
+.sellerForm textarea:focus {
+  outline: none;
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.4);
+}
+
+/* Pulsante salva */
+.sellerForm button[type="submit"] {
+  margin-top: 1rem;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: #0ea5e9;
+  color: white;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.sellerForm button[type="submit"]:hover {
+  background: #0284c7;
+  transform: translateY(-2px);
+}
+
+/* Immagini preview */
+.imagePreview {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+.imageItem {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+.imageItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #475569;
+}
+.imageItem button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: #f1f5f9;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+.imageItem button:hover {
+  background: #dc2626;
+}

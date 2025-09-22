@@ -1,0 +1,31 @@
+.page {
+  background: linear-gradient(to bottom, #0b0e17, #1e293b);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.card {
+  background-color: #0f172a;
+  padding: 3rem 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 0 40px rgba(0, 175, 255, 0.15);
+  max-width: 450px;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.text {
+  font-size: 1.1rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
