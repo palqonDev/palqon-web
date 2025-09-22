@@ -1,8 +1,9 @@
-type ComponentPageProps = {
+type PageProps = {
   params: {
     id: string
   }
 }
+
 
 export default async function Page({ params }: any) {
   const { id } = params
