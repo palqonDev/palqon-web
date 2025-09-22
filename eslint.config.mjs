@@ -19,12 +19,14 @@ const eslintConfig = [
       "build/**",
       "next-env.d.ts",
     ],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",   // disattiva errore "any"
-      "@typescript-eslint/no-unused-vars": "warn",  // solo warning se variabile non usata
-      "react/no-unescaped-entities": "off",         // disattiva errore su apostrofi/virgolette
-      "@next/next/no-img-element": "off",           // permetti <img> invece di <Image />
-    },
+rules: {
+  "@typescript-eslint/no-explicit-any": "off",
+  "@typescript-eslint/no-unused-vars": "warn",
+  "react/no-unescaped-entities": "off",
+  "@next/next/no-img-element": "off",
+  "@next/next/no-html-link-for-pages": "off", // permette <a> invece di <Link>
+  "prefer-const": "off", // non forza const invece di let
+},
   },
 ];
 
