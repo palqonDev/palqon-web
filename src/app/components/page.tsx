@@ -1,12 +1,26 @@
 "use client"
 
+import { Suspense } from "react"
 import { useEffect, useState, useRef } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { supabase } from "@/supabaseClient"
 import Link from "next/link"
 import styles from "./ComponentsList.module.css"
 
-declare global {
+
+
+// Questo è l’export che Next.js usa per la pagina
+export default function ComponentsResultsPageWrapper() {
+  return (
+    <Suspense fallback={<div>Caricamento...</div>}>
+      <ComponentsResultsPage />
+    </Suspense>
+  )
+}
+
+
+
+  declare global {
   interface Window {
     google: any
   }
@@ -79,7 +93,7 @@ type Component = {
 }
 
 
-export default function ComponentsResultsPage() {
+function ComponentsResultsPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
@@ -615,3 +629,10 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
     </div>
   )
 }
+
+
+
+
+
+
+
