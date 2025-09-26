@@ -15,6 +15,10 @@ export default function Navbar() {
   const [language, setLanguage] = useState("ITA")
   const [currency, setCurrency] = useState("€")
 
+  // carrello
+  const [cartCount, setCartCount] = useState(0)
+  const [showCartModal, setShowCartModal] = useState(false)
+
   // ref per gestire click esterni
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -95,6 +99,18 @@ export default function Navbar() {
     }
   }, [])
 
+  // gestione eventi "aggiungi al carrello"
+  useEffect(() => {
+    const handler = () => {
+      setCartCount((prev) => prev + 1)
+      setShowCartModal(true)
+    }
+    window.addEventListener("cart:add", handler)
+    return () => {
+      window.removeEventListener("cart:add", handler)
+    }
+  }, [])
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     setUser(null)
@@ -102,109 +118,149 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={styles.nav}>
-      <div className={styles.container} ref={dropdownRef}>
-        {/* Logo */}
-        <Link href="/" className={styles.logo}>
-          <img src="/logo.png" alt="Palqon" className={styles.logoImage} />
-        </Link>
+    <>
+      <nav className={styles.nav}>
+        <div className={styles.container} ref={dropdownRef}>
+          {/* Logo */}
+          <Link href="/" className={styles.logo}>
+            <img src="/logo.png" alt="Palqon" className={styles.logoImage} />
+          </Link>
 
-        {/* FAQ */}
-        <Link href="/faq" className={styles.faq}>
-          <span className={styles.faqIcon}>?</span>
-        </Link>
+          {/* FAQ */}
+          <Link href="/faq" className={styles.faq}>
+            <span className={styles.faqIcon}>?</span>
+          </Link>
 
-        {/* NEWS TICKER */}
-        <div className={styles.newsTicker}>
-          <div className={styles.tickerContent}>
-            <span>🎧 Nuovo mixer Pioneer DJM-A9 disponibile</span>
-            <span>🎶 Tomorrowland 2026 annuncia le prime date</span>
-            <span>🔊 Martin Audio lancia nuova linea subwoofer</span>
-            <span>💡 Novità: teste mobili LED super compatte</span>
+          {/* NEWS TICKER */}
+          <div className={styles.newsTicker}>
+            <div className={styles.tickerContent}>
+              <span>🎧 Nuovo mixer Pioneer DJM-A9 disponibile</span>
+              <span>🎶 Tomorrowland 2026 annuncia le prime date</span>
+              <span>🔊 Martin Audio lancia nuova linea subwoofer</span>
+              <span>💡 Novità: teste mobili LED super compatte</span>
+            </div>
+          </div>
+
+          {/* Selettori lingua e valuta */}
+          <div className={styles.selectors}>
+            {/* Lingua */}
+            <div className={styles.profile}>
+              <div
+                onClick={() =>
+                  setDropdownOpen(dropdownOpen === "lang" ? null : "lang")
+                }
+                className={styles.profileInfo}
+              >
+                <span className={styles.greeting}>
+                  {language} <span className={styles.arrow}>▾</span>
+                </span>
+              </div>
+              {dropdownOpen === "lang" && (
+                <div className={styles.dropdown}>
+                  <button onClick={() => setLanguage("ITA")}>ITA</button>
+                  <button onClick={() => setLanguage("ENG")}>ENG</button>
+                </div>
+              )}
+            </div>
+
+            {/* Valuta */}
+            <div className={styles.profile}>
+              <div
+                onClick={() =>
+                  setDropdownOpen(dropdownOpen === "curr" ? null : "curr")
+                }
+                className={styles.profileInfo}
+              >
+                <span className={styles.greeting}>
+                  {currency} <span className={styles.arrow}>▾</span>
+                </span>
+              </div>
+              {dropdownOpen === "curr" && (
+                <div className={styles.dropdown}>
+                  <button onClick={() => setCurrency("€")}>€</button>
+                  <button onClick={() => setCurrency("$")}>$</button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Azioni utente */}
+          {!user ? (
+            <div className={styles.actions}>
+              <Link href="/auth/login" className={styles.login}>
+                Login
+              </Link>
+              <Link href="/auth/register" className={styles.register}>
+                Registrati
+              </Link>
+            </div>
+          ) : (
+            <div className={styles.profile}>
+              <div
+                onClick={() =>
+                  setDropdownOpen(dropdownOpen === "user" ? null : "user")
+                }
+                className={styles.profileInfo}
+              >
+                <span className={styles.greeting}>
+                  Ciao, {user.name?.split(" ")[0]}{" "}
+                  <span className={styles.arrow}>▾</span>
+                </span>
+                <img
+                  src={user.avatar_url || "/default-avatar.png"}
+                  alt="avatar"
+                  className={styles.avatar}
+                />
+              </div>
+
+              {dropdownOpen === "user" && (
+                <div className={styles.dropdown}>
+                  <Link href="/profile">Profilo</Link>
+                  <button onClick={handleLogout}>Logout</button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Carrello */}
+          <div className={styles.cart} onClick={() => router.push("/cart")}>
+            <img src="/icons/cart.svg" alt="Carrello" className={styles.cartIcon} />
+            {cartCount > 0 && (
+              <span className={styles.cartBadge}>{cartCount}</span>
+            )}
           </div>
         </div>
+      </nav>
 
-        {/* Selettori lingua e valuta */}
-        <div className={styles.selectors}>
-          {/* Lingua */}
-          <div className={styles.profile}>
-            <div
-              onClick={() =>
-                setDropdownOpen(dropdownOpen === "lang" ? null : "lang")
-              }
-              className={styles.profileInfo}
-            >
-              <span className={styles.greeting}>
-                {language} <span className={styles.arrow}>▾</span>
-              </span>
-            </div>
-            {dropdownOpen === "lang" && (
-              <div className={styles.dropdown}>
-                <button onClick={() => setLanguage("ITA")}>ITA</button>
-                <button onClick={() => setLanguage("ENG")}>ENG</button>
-              </div>
-            )}
-          </div>
+      {/* Modal carrello */}
+      {showCartModal && (
+        <div className={styles.cartModal}>
+          <div className={styles.cartModalContent}>
+            <p>Articolo aggiunto al carrello</p>
+            <div className={styles.cartModalActions}>
+<Link href="/components" className={styles.continueBtn}>
+  Continua gli acquisti
+</Link>
 
-          {/* Valuta */}
-          <div className={styles.profile}>
-            <div
-              onClick={() =>
-                setDropdownOpen(dropdownOpen === "curr" ? null : "curr")
-              }
-              className={styles.profileInfo}
-            >
-              <span className={styles.greeting}>
-                {currency} <span className={styles.arrow}>▾</span>
-              </span>
+              <button
+  onClick={() => {
+    setShowCartModal(false)  // chiude il modal
+    router.push("/cart")     // vai al carrello
+  }}
+>
+  Vai al checkout
+</button>
+
             </div>
-            {dropdownOpen === "curr" && (
-              <div className={styles.dropdown}>
-                <button onClick={() => setCurrency("€")}>€</button>
-                <button onClick={() => setCurrency("$")}>$</button>
-              </div>
-            )}
           </div>
         </div>
-
-        {/* Azioni utente */}
-        {!user ? (
-          <div className={styles.actions}>
-            <Link href="/auth/login" className={styles.login}>
-              Login
-            </Link>
-            <Link href="/auth/register" className={styles.register}>
-              Registrati
-            </Link>
-          </div>
-        ) : (
-          <div className={styles.profile}>
-            <div
-              onClick={() =>
-                setDropdownOpen(dropdownOpen === "user" ? null : "user")
-              }
-              className={styles.profileInfo}
-            >
-              <span className={styles.greeting}>
-                Ciao, {user.name?.split(" ")[0]}{" "}
-                <span className={styles.arrow}>▾</span>
-              </span>
-              <img
-                src={user.avatar_url || "/default-avatar.png"}
-                alt="avatar"
-                className={styles.avatar}
-              />
-            </div>
-
-            {dropdownOpen === "user" && (
-              <div className={styles.dropdown}>
-                <Link href="/profile">Profilo</Link>
-                <button onClick={handleLogout}>Logout</button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    </nav>
+      )}
+    </>
   )
+}
+
+// Funzione globale da richiamare nei componenti per aggiungere item al carrello
+export function addToCart() {
+  const event = new CustomEvent("cart:add")
+  window.dispatchEvent(event)
 }

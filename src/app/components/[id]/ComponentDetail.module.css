@@ -1,0 +1,338 @@
+/* --- CONTAINER PRINCIPALE --- */
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  background: #0f172a;
+  color: #f1f5f9;
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* --- HEADER --- */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00afff;
+  margin-bottom: 0.5rem;
+  margin-top: -1.5rem;
+}
+.badge {
+  display: inline-block;
+  margin-top: 0.1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* --- COLORI TAG CATEGORIA (come ComponentsList) --- */
+.tag-PALCO { background: #f97316; color: #1e293b; }
+.tag-LUCI { background: #facc15; color: #1e293b; }
+.tag-AUDIO { background: #4ade80; color: #1e293b; }
+.tag-DJ { background: #f472b6; }
+.tag-ALTRO { background: #94a3b8; }
+.tag-BUNDLE { background: #8b5cf6; }
+
+/* --- SELLER INFO --- */
+.sellerInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+}
+.sellerAvatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #334155;
+}
+.sellerName {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.sellerCity {
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+.sellerRating {
+  font-size: 0.9rem;
+  color: #fbbf24;
+  margin-top: 0.2rem;
+}
+
+.sellerLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.sellerLink:hover {
+  color: #00AFFF; /* o accent #FF006E se vuoi evidenziare */
+}
+
+
+/* --- BOTTONI --- */
+.bookBtn {
+  background: #00afff;
+  color: #fff;
+  border: none;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+.bookBtn:hover {
+  background: #0284c7;
+}
+
+/* --- GALLERIA IMMAGINI --- */
+.gallery {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.mainImage {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.sideImages {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+.sideImages img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.placeholder {
+  background: #1e293b;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #64748b;
+  height: 320px;
+  font-size: 0.9rem;
+}
+
+/* --- DESCRIZIONE --- */
+.description {
+  margin: 1rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+/* --- TAG INDOOR/OUTDOOR --- */
+.tagWrapper {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.indoorTag {
+  background: #22c55e;
+  color: #0f172a;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+.outdoorTag {
+  background: #3b82f6;
+  color: #fff;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* --- DETTAGLI TECNICI --- */
+.details {
+  margin-top: 1rem;
+  background: #1e293b;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.details h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center; /* titolo centrato */
+  margin-bottom: 1.5rem;
+  color: #38bdf8;
+}
+.details p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+.details strong {
+  color: #f1f5f9;
+}
+.detailDescription {
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+}
+/* layout due colonne */
+.detailsContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.detailsLeft p,
+.detailsRight p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.sidebarBox {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1rem;
+}
+.sidebarBox h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  color: #38bdf8;
+}
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.priceOriginal {
+  font-size: 0.9rem;
+  color: #ef4444;
+  text-decoration: line-through;
+}
+.priceDay {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #00afff;
+}
+
+/* --- CALENDARIO (React-Calendar custom, global override) --- */
+.calendarWrapper {
+  margin-top: 0.5rem;
+}
+
+/* root calendario */
+.calendarWrapper :global(.react-calendar) {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  border-radius: 16px !important;
+  padding: 0.75rem !important;
+  color: #f1f5f9 !important;
+  width: 100% !important;
+  font-family: 'Poppins', sans-serif !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* navigazione mesi */
+.calendarWrapper :global(.react-calendar__navigation) {
+  display: flex !important;
+  justify-content: space-between !important;
+  margin-bottom: 0.5rem !important;
+}
+.calendarWrapper :global(.react-calendar__navigation button) {
+  color: #f1f5f9 !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  transition: color 0.2s ease !important;
+}
+.calendarWrapper :global(.react-calendar__navigation button:hover) {
+  color: #00AFFF !important; /* primary blue */
+}
+
+/* intestazioni giorni */
+.calendarWrapper :global(.react-calendar__month-view__weekdays) {
+  text-align: center !important;
+  font-weight: 600 !important;
+  color: #00AFFF !important; /* brand primary */
+  font-size: 0.9rem !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* celle giorni */
+.calendarWrapper :global(.react-calendar__tile) {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+  border-radius: 8px !important;
+  padding: 0.6rem 0.2rem !important;
+  transition: all 0.25s ease-in-out !important;
+}
+.calendarWrapper :global(.react-calendar__tile:hover) {
+  background: #FF006E !important; /* accent color */
+  color: #fff !important;
+  transform: scale(1.05) !important;
+}
+.calendarWrapper :global(.react-calendar__tile--now) {
+  border: 1px solid #00AFFF !important;
+  font-weight: 600 !important;
+}
+
+/* giorno attivo */
+.calendarWrapper :global(.react-calendar__tile--active) {
+  background: linear-gradient(135deg, #007BFF, #00D4FF) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+/* range selezionato */
+.calendarWrapper :global(.react-calendar__tile--range) {
+  background: #0284c7 !important;
+  color: #fff !important;
+  border-radius: 8px !important;
+}
+
+/* giorni disabilitati */
+.calendarWrapper :global(.react-calendar__tile:disabled) {
+  background: #1e293b !important;
+  color: #64748b !important;
+  text-decoration: line-through !important;
+  cursor: not-allowed !important;
+}
+
+
+
+/* --- RIEPILOGO PRENOTAZIONE --- */
+.bookingSummary {
+  margin-top: 1rem;
+  background: #1e293b;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #334155;
+}
+.bookingSummary p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+}

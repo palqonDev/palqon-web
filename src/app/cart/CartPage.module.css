@@ -1,0 +1,259 @@
+/* --- CONTAINER --- */
+.container {
+  background: #0f172a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+/* --- TITLE --- */
+.title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #00afff;
+}
+
+/* --- LISTA --- */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* --- CARD --- */
+.cartCard {
+  background: #1e293b;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  padding: 1rem;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cartCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+}
+
+/* --- COUNTDOWN BADGE --- */
+.countdownBadge {
+  position: absolute;
+  bottom: 8px;
+  Right: 8px;
+  background: #ef4444;
+  color: white;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+/* --- GRIGLIA INTERNA --- */
+.cardGrid {
+  display: grid;
+  grid-template-columns: 200px 1fr 220px;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* --- IMMAGINE --- */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background: #0f172a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.componentImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.componentImg:hover {
+  transform: scale(1.03);
+}
+
+.placeholder {
+  color: #64748b;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* --- INFO --- */
+.infoColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.componentTitle {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #00afff;
+  margin: 0 0 0.3rem 0;
+}
+
+.label {
+  font-weight: 600;
+  color: #cbd5e1;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #f1f5f9;
+  font-size: 0.9rem;
+}
+
+.description {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: #e2e8f0;
+  margin-top: 0.5rem;
+  max-height: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --- PREZZO --- */
+.priceColumn {
+  padding-right: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0rem;
+}
+
+.originalPrice {
+  font-size: 0.9rem;
+  color: #ef4444;
+  text-decoration: line-through;
+}
+
+.discountedPrice {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #00afff;
+}
+
+.priceNote {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* --- BOX TOTALE --- */
+.summary {
+  margin-top: 2rem;
+  padding: 1.2rem;
+  background: #1e293b;
+  border-radius: 12px;
+  text-align: right;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.summaryText {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+/* --- AZIONI --- */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.continueBtn {
+  background: #334155;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.continueBtn:hover {
+  background: #475569;
+  transform: translateY(-1px);
+}
+
+.checkoutBtn {
+  background: linear-gradient(135deg, #007BFF, #00D4FF);
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.checkoutBtn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #00D4FF, #007BFF);
+}
+
+/* --- CARRELLO VUOTO --- */
+.empty {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.backBtn {
+  display: inline-block;
+  background: #00afff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.backBtn:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+}
+
+/* --- REMOVE BTN --- */
+.removeBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.removeBtn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
