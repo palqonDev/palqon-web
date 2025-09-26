@@ -513,3 +513,49 @@
 .imageItem button:hover {
   background: #dc2626;
 }
+
+/* Client dashboard con stesso livello del seller */
+.clientDashboard {
+  background: #0f172a;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+/* Liste ordini e recensioni */
+.ordersList, .reviewsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.ordersList li, .reviewsList li {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.6rem;
+}
+.orderMeta, .reviewMeta {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 0.2rem;
+}
+
+/* Badge stato ordine */
+.badgeStatus {
+  display: inline-block;
+  margin: 0 0.4rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+  background: #334155;
+  color: #e2e8f0;
+  font-size: 0.75rem;
+}
+
+/* Box pagamento */
+.payBox {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+}

@@ -114,6 +114,12 @@ const [newComponent, setNewComponent] = useState({
   const [images, setImages] = useState<File[]>([])
   const [currency] = useState("€")
 
+  // --- CLIENT side data ---
+  const [clientStats, setClientStats] = useState({ active: 0, spent: 0, reviews: 0 })
+  const [myOrders, setMyOrders] = useState<any[]>([])
+  const [myGivenReviews, setMyGivenReviews] = useState<any[]>([])
+
+
   const {
   ready,
   value: cityValue,
@@ -186,10 +192,14 @@ setFormData((prev) => ({
 
            setValue(data.city_name || "", false)
 
+           await fetchClientData(data.id)
+
           if (data.role === "seller") {
             await fetchStats(data.id)
           }
         }
+
+
       }
       setLoading(false)
     }
@@ -280,6 +290,35 @@ setFormData((prev) => ({
 
     setReviews(reviewsData?.slice(0, 3) || [])
   }
+
+  const fetchClientData = async (clientId: string) => {
+  // prenotazioni come CLIENT
+  const { data: orders } = await supabase
+    .from("bookings")
+    .select("id, status, total_price, created_at, date_start, date_end, description")
+    .eq("client_id", clientId)
+    .order("created_at", { ascending: false })
+    .limit(5)
+
+  setMyOrders(orders || [])
+
+  // spesa totale e attive
+  const totalSpent =
+    orders?.reduce((s, o) => s + (Number(o.total_price) || 0), 0) || 0
+  const activeCount = orders?.filter(o => o.status === "active" || o.status === "paid")?.length || 0
+
+  // recensioni lasciate come CLIENT
+  const { data: given } = await supabase
+    .from("reviews")
+    .select("rating, comment, created_at")
+    .eq("reviewer_id", clientId)
+    .order("created_at", { ascending: false })
+    .limit(5)
+
+  setMyGivenReviews(given || [])
+  setClientStats({ active: activeCount, spent: totalSpent, reviews: given?.length || 0 })
+}
+
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -451,76 +490,150 @@ const isSellerDataComplete = () => {
       </div>
 
       {/* CLIENT VIEW */}
-      {user.role === "client" && (
-        <div className={styles.clientBox}>
-          <form onSubmit={handleUpdateProfile} className={styles.profileForm}>
-            <input
-              type="text"
-              placeholder="Nome"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            />
-<input
-  type="text"
-  placeholder="Città"
-  value={formData.city_name || ""}
-  onChange={(e) => setFormData({ ...formData, city_name: e.target.value })}
-/>
-
-            <input
-              type="text"
-              placeholder="Stato"
-              value={formData.state}
-              onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-            />
-            <button type="submit">Salva modifiche</button>
-          </form>
-
-          <div className={styles.supportBox}>
-            <h3>Supporto & FAQ</h3>
-            <a href="/faq">Vai alle FAQ</a>
-            <a href="/support">Contatta assistenza</a>
+{user.role === "client" && (
+  <div className={styles.clientDashboard}>
+    <div className={styles.dashboardGrid}>
+      {/* COLONNA SINISTRA */}
+      <div className={styles.leftCol}>
+        {/* Cards riepilogo */}
+        <section className={styles.cards}>
+          <div className={styles.card}>
+            Prenotazioni attive<br />
+            <strong>{clientStats.active}</strong>
           </div>
+          <div className={styles.card}>
+            Spesa totale<br />
+            <strong>€ {clientStats.spent.toFixed(2)}</strong>
+          </div>
+          <div className={styles.card}>
+            Recensioni lasciate<br />
+            <strong>{clientStats.reviews}</strong>
+          </div>
+        </section>
 
-          <h3>Vuoi diventare un Seller?</h3>
-          <form onSubmit={handleUpdateProfile} className={styles.sellerForm}>
-            <input
-              type="text"
-              placeholder="Nome azienda"
-              value={formData.company_name}
-              onChange={(e) =>
-                setFormData({ ...formData, company_name: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="Partita IVA"
-              value={formData.vat_number}
-              onChange={(e) =>
-                setFormData({ ...formData, vat_number: e.target.value })
-              }
-            />
-            <textarea
-              placeholder="Descrizione attività"
-              value={formData.business_description}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  business_description: e.target.value,
-                })
-              }
-            />
-            <button
-              type="submit"
-              onClick={() =>
-                setFormData((prev) => ({ ...prev, role: "seller" }))
-              }
-            >
-              Diventa Seller
-            </button>
-          </form>
-        </div>
-      )}
+        {/* I miei ordini */}
+        <section className={styles.block}>
+          <h3>I miei ordini</h3>
+          {myOrders.length > 0 ? (
+            <ul className={styles.ordersList}>
+              {myOrders.map((o) => (
+                <li key={o.id}>
+                  <span>#{o.id.slice(0, 8)}</span> •
+                  <span> {new Date(o.created_at).toLocaleDateString("it-IT")} </span> •
+                  <span className={styles.badgeStatus}>{o.status}</span> •
+                  <strong> € {Number(o.total_price || 0).toFixed(2)}</strong>
+                  <div className={styles.orderMeta}>
+                    {new Date(o.date_start).toLocaleDateString()} → {new Date(o.date_end).toLocaleDateString()}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Nessun ordine</p>
+          )}
+        </section>
+
+        {/* Le mie recensioni */}
+        <section className={styles.block}>
+          <h3>Le mie recensioni</h3>
+          {myGivenReviews.length > 0 ? (
+            <ul className={styles.reviewsList}>
+              {myGivenReviews.map((r, i) => (
+                <li key={i}>
+                  {"⭐".repeat(r.rating)} <span>{r.comment || ""}</span>
+                  <div className={styles.reviewMeta}>
+                    {new Date(r.created_at).toLocaleDateString("it-IT")}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Nessuna recensione inviata</p>
+          )}
+        </section>
+
+        {/* Supporto */}
+        <section className={styles.block}>
+          <h3>Supporto & FAQ</h3>
+          <a href="/faq">FAQ</a>
+          <a href="/support">Contatta assistenza</a>
+          <a href="/terms">Termini e rimborsi</a>
+        </section>
+      </div>
+
+      {/* COLONNA DESTRA */}
+      <div className={styles.rightCol}>
+        {/* Dati personali */}
+        <form onSubmit={handleUpdateProfile} className={styles.profileForm}>
+          <h3>Dati personali</h3>
+          <label>Nome e Cognome</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+
+          <label>Email</label>
+          <input type="email" value={user.email} disabled />
+
+          <label>Telefono</label>
+          <input
+            type="tel"
+            value={formData.phone || ""}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          />
+
+          <label>Indirizzo</label>
+          <input
+            type="text"
+            value={formData.address || ""}
+            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+          />
+
+          <label>Città</label>
+          <input
+            type="text"
+            value={formData.city_name || ""}
+            onChange={(e) => setFormData({ ...formData, city_name: e.target.value })}
+          />
+
+          <label>Stato</label>
+          <input
+            type="text"
+            value={formData.state}
+            onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+          />
+
+          <button type="submit">Salva modifiche</button>
+        </form>
+
+        {/* Metodo di pagamento */}
+        <section className={styles.block}>
+          <h3>Metodo di pagamento</h3>
+          {user.card_last4 ? (
+            <p className={styles.payBox}>
+              Carta salvata: {user.card_brand?.toUpperCase() || "CARD"} •••• {user.card_last4}
+            </p>
+          ) : (
+            <p className={styles.payBox}>
+              Nessuna carta salvata. <a href="/billing">Aggiungi carta</a>
+            </p>
+          )}
+        </section>
+
+        {/* Notifiche e account */}
+        <section className={styles.block}>
+          <h3>Account</h3>
+          <ul>
+            <li><a href="/auth/change-password">Cambia password</a></li>
+            <li><a href="/auth/logout">Logout</a></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* SELLER VIEW */}
 {user.role === "seller" && (
@@ -622,6 +735,47 @@ const isSellerDataComplete = () => {
           <a href="/faq">FAQ</a>
           <a href="/support">Contatta assistenza</a>
         </section>
+
+{/* Ordini come cliente */}
+<section className={styles.block}>
+  <h3>I miei ordini (da cliente)</h3>
+  {myOrders.length > 0 ? (
+    <ul className={styles.ordersList}>
+      {myOrders.map((o) => (
+        <li key={o.id}>
+          <span>#{o.id.slice(0, 8)}</span> •
+          <span> {new Date(o.created_at).toLocaleDateString("it-IT")} </span> •
+          <span className={styles.badgeStatus}>{o.status}</span> •
+          <strong> € {Number(o.total_price || 0).toFixed(2)}</strong>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>Nessun ordine</p>
+  )}
+</section>
+
+{/* Recensioni inviate */}
+<section className={styles.block}>
+  <h3>Le mie recensioni inviate</h3>
+  {myGivenReviews.length > 0 ? (
+    <ul className={styles.reviewsList}>
+      {myGivenReviews.map((r, i) => (
+        <li key={i}>
+          {"⭐".repeat(r.rating)} <span>{r.comment || ""}</span>
+          <div className={styles.reviewMeta}>
+            {new Date(r.created_at).toLocaleDateString("it-IT")}
+          </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>Nessuna recensione inviata</p>
+  )}
+</section>
+
+
+
       </div>
 
       {/* COLONNA DESTRA */}
@@ -740,6 +894,23 @@ const isSellerDataComplete = () => {
           setFormData({ ...formData, account_holder: e.target.value })
         }
       />
+
+{/* Metodo di pagamento per acquisti da cliente */}
+<section className={styles.block}>
+  <h3>Metodo di pagamento</h3>
+  {user.card_last4 ? (
+    <p className={styles.payBox}>
+      Carta salvata: {user.card_brand?.toUpperCase() || "CARD"} •••• {user.card_last4}
+    </p>
+  ) : (
+    <p className={styles.payBox}>
+      Nessuna carta salvata. <a href="/billing">Aggiungi carta</a>
+    </p>
+  )}
+</section>
+
+
+
     </fieldset>
 
     {/* ATTIVITÀ E SETTORE */}
