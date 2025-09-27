@@ -1,27 +1,30 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+// app/middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  const basicAuth = req.headers.get("authorization")
+  const auth = req.headers.get('authorization') || ''
 
-  if (basicAuth) {
-    const authValue = basicAuth.split(" ")[1]
-    const [user, pwd] = atob(authValue).split(":")
+  if (auth.startsWith('Basic ')) {
+    try {
+      const encoded = auth.split(' ')[1]
+      const decoded = atob(encoded) // Edge runtime supporta atob
+      const [user, pass] = decoded.split(':')
 
-    // 👇 cambia con le credenziali che vuoi dare al tuo amico
-    if (user === "palqon" && pwd === "test1234") {
-      return NextResponse.next()
+      if (user === process.env.BASIC_USER && pass === process.env.BASIC_PASS) {
+        return NextResponse.next()
+      }
+    } catch (e) {
+      // ignora e continua a richiedere auth
     }
   }
 
-  return new NextResponse("Auth required", {
+  return new Response('Authentication required', {
     status: 401,
-    headers: {
-      "WWW-Authenticate": 'Basic realm="Secure Area"',
-    },
+    headers: { 'WWW-Authenticate': 'Basic realm="Protected"' },
   })
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 }
