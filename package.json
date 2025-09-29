@@ -10,6 +10,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^4.0.2",
+    "@stripe/stripe-js": "^7.9.0",
     "@supabase/supabase-js": "^2.57.3",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
@@ -36,11 +38,7 @@
     "postcss": "^8.5.6",
     "typescript": "^5"
   },
-
-    "engines": {
+  "engines": {
     "node": "22.x"
   }
-
-
-
 }
