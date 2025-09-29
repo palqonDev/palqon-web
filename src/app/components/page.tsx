@@ -419,11 +419,7 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   onChange={(e) => setMaxPrice(e.target.value)}
 />
 
-<select
-  value={category}
-  onChange={(e) => setCategory(e.target.value)}
-  className={styles.select}
->
+<select className={styles.selectStyled}>
   <option value="all">Tutte le categorie</option>
   <option value="location">Location</option>
   <option value="audio">Audio</option>
@@ -433,6 +429,7 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
   <option value="bundle">Bundle</option>
   <option value="altro">Altro</option>
 </select>
+
 
 <select
   className={styles.selectStyled}

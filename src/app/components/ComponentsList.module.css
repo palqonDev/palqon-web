@@ -29,8 +29,13 @@
 .toolbar {
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  margin: 1rem 0 2rem 0;
+  gap: 1rem;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #0B0E17, #0f172a);
+  box-shadow: 0 0 25px rgba(0, 175, 255, 0.25);
+  max-width: 900px;
 }
 
 .toolbarTop {
@@ -42,14 +47,22 @@
 .searchInput {
   flex: 1;
   max-width: 600px;
-  padding: 0.8rem 1.2rem;
-  border: 1px solid #334155;
+  padding: 1rem 1.5rem;
+  border: 2px solid #00afff;
   border-radius: 9999px;
   font-size: 1rem;
   background: #0f172a;
   color: #f1f5f9;
-  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  box-shadow: 0 0 15px rgba(0,175,255,0.3);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
+
+.searchInput:focus {
+  outline: none;
+  box-shadow: 0 0 25px rgba(0,212,255,0.5);
+  transform: scale(1.01);
+}
+
 
 .toolbarBottom {
   display: flex;
@@ -57,23 +70,82 @@
   gap: 0.8rem;
   justify-content: center;
   align-items: center;
+  margin-top: 1rem;
 }
+
+.selectStyled {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: #0f172a url("data:image/svg+xml,%3Csvg fill='white' xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 0.9rem center;
+  background-size: 14px;
+  padding: 0.8rem 2.5rem 0.8rem 1.2rem; /* spazio per la freccia */
+  border: 2px solid #00afff;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #f1f5f9;
+  cursor: pointer;
+  min-width: 160px;
+  box-shadow: 0 0 15px rgba(0,175,255,0.25);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.selectStyled:hover {
+  box-shadow: 0 0 25px rgba(0,212,255,0.4);
+  transform: translateY(-1px);
+}
+
+.selectStyled:focus {
+  outline: none;
+  border-color: #00d4ff;
+  box-shadow: 0 0 30px rgba(0,212,255,0.6);
+}
+
+
 
 .selectStyled,
 .priceInput {
-  padding: 0.6rem 1rem;
+  padding: 0.7rem 1.2rem;
   border: 1px solid #334155;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.95rem;
   background: #1e293b;
   color: #f1f5f9;
   cursor: pointer;
-  min-width: 130px;
+  min-width: 140px;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selectStyled:hover,
+.priceInput:hover {
+  background: #273548;
+  box-shadow: 0 0 12px rgba(0,175,255,0.3);
+  transform: translateY(-1px);
 }
 
 .priceInput {
   width: 120px;
+  text-align: center;
 }
+
+/* Mobile ottimizzazione */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 1rem;
+  }
+  .searchInput {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.2rem;
+  }
+  .selectStyled,
+  .priceInput {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    min-width: 110px;
+  }
+}
+
+
 
 /* --- LISTA RISULTATI --- */
 .grid {
@@ -394,5 +466,75 @@
 .verifyBtnInline:hover {
   background: #0284c7;
   transform: translateY(-1px);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .cardGrid {
+    grid-template-columns: 200px 1fr; /* immagine a sinistra, info a destra */
+    gap: 0.8rem;
+  }
+
+  .descriptionColumn {
+    grid-column: span 2; /* descrizione sotto immagine+info */
+    max-height: none;
+  }
+
+  .priceTagColumn {
+    align-items: flex-start;
+  }
+}
+
+/* Mobile medio */
+@media (max-width: 768px) {
+  .cardGrid {
+    grid-template-columns: 1fr; /* tutto in colonna */
+  }
+
+  .imageWrapper {
+    height: 180px;
+  }
+
+  .descriptionColumn {
+    order: 3;
+    margin-top: 0.5rem;
+  }
+
+  .priceTagColumn {
+    order: 4;
+    margin-top: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .componentTitle {
+    font-size: 1.2rem;
+  }
+}
+
+/* Mobile piccolo */
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .componentCard {
+    padding: 0.6rem;
+  }
+
+  .imageWrapper {
+    height: 150px;
+  }
+
+  .componentTitle {
+    font-size: 1rem;
+  }
+
+  .descriptionColumn p {
+    font-size: 0.85rem;
+  }
+
+  .discountedPrice {
+    font-size: 1.1rem;
+  }
 }
 
