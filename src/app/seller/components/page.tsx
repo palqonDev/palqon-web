@@ -264,7 +264,7 @@ const fetchBundleDetails = async (bundleId: string) => {
 
   const emptyForm = {
     name: "",
-    type: "PALCO",
+    type: "PALCHI",
     brand: "",
     power_kw: "",
     phase: "",
@@ -293,6 +293,13 @@ const fetchBundleDetails = async (bundleId: string) => {
     attrezzatura: "",
     quantita: "",
     materiale: "",
+      location_address: "",
+  location_city: "",
+  location_capacity: "",
+  location_surface: "",
+  location_services: "",
+  location_rules: "",
+
   }
 
   const [formData, setFormData] = useState<any>(emptyForm)
@@ -302,7 +309,7 @@ const fetchBundleDetails = async (bundleId: string) => {
   const [currency] = useState("€")
 
   const [currentImageIndex, setCurrentImageIndex] = useState<{ [key: string]: number }>({})
-  const [activeTab, setActiveTab] = useState<string>("PALCO")
+  const [activeTab, setActiveTab] = useState<string>("PALCHI")
 
   useEffect(() => {
     fetchComponents()
@@ -342,7 +349,7 @@ const fetchBundleDetails = async (bundleId: string) => {
       }
 
       switch (formData.type) {
-        case "PALCO":
+        case "PALCHI":
           Object.assign(payload, {
             lunghezza: normalize(formData.lunghezza),
             larghezza: normalize(formData.larghezza),
@@ -371,7 +378,19 @@ const fetchBundleDetails = async (bundleId: string) => {
             risposta: formData.risposta,
           })
           break
-case "DJ":
+
+          case "LOCATION":
+  Object.assign(payload, {
+    location_address: formData.location_address,
+    location_city: formData.location_city,
+    location_capacity: normalize(formData.location_capacity),
+    location_surface: normalize(formData.location_surface),
+    location_services: formData.location_services,
+    location_rules: formData.location_rules,
+  })
+  break
+
+case "ARTISTI":
   Object.assign(payload, {
     genere: formData.genere,
     durata: normalize(formData.durata),
@@ -447,7 +466,7 @@ case "DJ":
     setFormData(comp)
     setPreviewUrls(comp.images || [])
     setShowForm(true)
-    setActiveTab(comp.type || "PALCO")
+    setActiveTab(comp.type || "PALCHI")
   }
 
   const toggleStatus = async (id: string, currentStatus: string) => {
@@ -491,7 +510,7 @@ case "DJ":
         setFormData(emptyForm)
         setImages([])
         setPreviewUrls([])
-        setActiveTab("PALCO")
+        setActiveTab("PALCHI")
         setShowForm(true)
       }}
     >
@@ -534,10 +553,10 @@ case "DJ":
       className={styles.selectStyled}
     >
       <option value="ALL">Tutte le categorie</option>
-      <option value="PALCO">Palco</option>
+      <option value="PALCHI">Palchi</option>
       <option value="LUCI">Luci</option>
       <option value="AUDIO">Audio</option>
-      <option value="DJ">DJ/Artista</option>
+      <option value="ARTISTI">Artisti</option>
       <option value="ALTRO">Altro</option>
     </select>
 
@@ -653,7 +672,49 @@ case "DJ":
                   </div>
 
                   <div className={styles.infoColumn}>
-                    {c.type === "PALCO" && (
+                    {c.type === "LOCATION" && (
+  <>
+    {c.location_address && (
+      <div className={styles.infoRow}>
+        <span className={styles.label}>Indirizzo:</span>
+        <span className={styles.value}>{c.location_address}</span>
+      </div>
+    )}
+    {c.location_city && (
+      <div className={styles.infoRow}>
+        <span className={styles.label}>Città:</span>
+        <span className={styles.value}>{c.location_city}</span>
+      </div>
+    )}
+    {c.location_capacity && (
+      <div className={styles.infoRow}>
+        <span className={styles.label}>Capienza:</span>
+        <span className={styles.value}>{c.location_capacity} persone</span>
+      </div>
+    )}
+    {c.location_surface && (
+      <div className={styles.infoRow}>
+        <span className={styles.label}>Superficie:</span>
+        <span className={styles.value}>{c.location_surface} m²</span>
+      </div>
+    )}
+    {c.location_services && (
+      <div className={styles.infoRow}>
+        <span className={styles.label}>Servizi:</span>
+        <span className={styles.value}>{c.location_services}</span>
+      </div>
+    )}
+    {c.location_rules && (
+      <div className={styles.infoRow}>
+        <span className={styles.label}>Regole:</span>
+        <span className={styles.value}>{c.location_rules}</span>
+      </div>
+    )}
+  </>
+)}
+
+
+                    {c.type === "PALCHI" && (
                       <>
                         {c.lunghezza && <div className={styles.infoRow}><span className={styles.label}>Lunghezza:</span><span className={styles.value}>{c.lunghezza} m</span></div>}
                         {c.larghezza && <div className={styles.infoRow}><span className={styles.label}>Larghezza:</span><span className={styles.value}>{c.larghezza} m</span></div>}
@@ -688,7 +749,7 @@ case "DJ":
                         {c.extra_cost_per_km && (<div className={styles.infoRow}><span className={styles.label}>Extra costo per km:</span><span className={styles.value}>{currency} {c.extra_cost_per_km}</span></div>)}
                       </>
                     )}
-                    {c.type === "DJ" && (
+                    {c.type === "ARTISTI" && (
                       <>
                         {c.genere && <div className={styles.infoRow}><span className={styles.label}>Genere:</span><span className={styles.value}>{c.genere}</span></div>}
                         {c.durata && <div className={styles.infoRow}><span className={styles.label}>Durata:</span><span className={styles.value}>{c.durata} h</span></div>}
@@ -839,37 +900,126 @@ case "DJ":
             </h2>
 
             <div className={styles.categoryTabs}>
-              {["PALCO", "LUCI", "AUDIO", "DJ", "ALTRO"].map(cat => (
+  {["LOCATION", "AUDIO", "LUCI", "PALCHI", "ARTISTI", "ALTRO"].map(cat => (
+
                 <button
                   key={cat}
                   type="button"
                   className={`${styles.categoryTab} ${activeTab === cat ? styles.activeTab : ""}`}
                   onClick={() => { setActiveTab(cat); setFormData({ ...formData, type: cat }) }}
                 >
-                  {cat === "DJ" ? "DJ/ARTISTA" : cat}
+                  {cat === "ARTISTI" ? "ARTISTI" : cat}
                 </button>
               ))}
             </div>
 
             <form onSubmit={handleSubmit} className={styles.modalForm}>
-              {/* PALCO */}
-              {activeTab === "PALCO" && (
+
+              {/* LOCATION */}
+{activeTab === "LOCATION" && (
+  <div className={styles.formGrid3}>
+    <div className={styles.formColumn}>
+      <label>Nome location</label>
+      <input
+        type="text"
+        value={formData.name || ""}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+      />
+      <label>Indirizzo</label>
+      <input
+        type="text"
+        value={formData.location_address || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, location_address: e.target.value })
+        }
+      />
+      <label>Città</label>
+      <input
+        type="text"
+        value={formData.location_city || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, location_city: e.target.value })
+        }
+      />
+      
+
+
+    </div>
+
+    <div className={styles.formColumn}>
+      <label>Capienza massima (persone)</label>
+      <input
+        type="number"
+        value={formData.location_capacity || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, location_capacity: e.target.value })
+        }
+      />
+      <label>Superficie (m²)</label>
+      <input
+        type="number"
+        value={formData.location_surface || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, location_surface: e.target.value })
+        }
+      />
+      <label>Servizi inclusi</label>
+      <textarea
+        className={styles.textareaStyled}
+        placeholder="Parcheggio, WiFi, Catering..."
+        value={formData.location_services || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, location_services: e.target.value })
+        }
+      />
+    </div>
+
+    <div className={styles.formColumn}>
+      <label>Regole / condizioni</label>
+      <textarea
+        className={styles.textareaStyled}
+        placeholder="Orari, limiti rumore, restrizioni..."
+        value={formData.location_rules || ""}
+        onChange={(e) =>
+          setFormData({ ...formData, location_rules: e.target.value })
+        }
+      />
+        <label>Prezzo originale ({currency})</label>
+  <input
+    type="number"
+    value={formData.price_original || ""}
+    onChange={(e) => setFormData({ ...formData, price_original: e.target.value })}
+  />
+  <label>Prezzo scontato ({currency})</label>
+  <input
+    type="number"
+    value={formData.price_1day || ""}
+    onChange={(e) => setFormData({ ...formData, price_1day: e.target.value })}
+  />
+    </div>
+  </div>
+)}
+
+              {/* AUDIO */}
+              {activeTab === "AUDIO" && (
                 <div className={styles.formGrid3}>
                   <div className={styles.formColumn}>
                     <label>Nome componente</label>
                     <input type="text" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                    <label>Lunghezza (m)</label>
-                    <input type="number" value={formData.lunghezza || ""} onChange={(e) => setFormData({ ...formData, lunghezza: e.target.value })} />
-                    <label>Larghezza (m)</label>
-                    <input type="number" value={formData.larghezza || ""} onChange={(e) => setFormData({ ...formData, larghezza: e.target.value })} />
-                  </div>
-                  <div className={styles.formColumn}>
-                    <label>Altezza (m)</label>
-                    <input type="number" value={formData.altezza || ""} onChange={(e) => setFormData({ ...formData, altezza: e.target.value })} />
-                    <label>Peso (kg)</label>
-                    <input type="number" value={formData.peso || ""} onChange={(e) => setFormData({ ...formData, peso: e.target.value })} />
                     <label>Marchio</label>
                     <input type="text" value={formData.brand || ""} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} />
+                    <label>Potenza RMS (W)</label>
+                    <input type="number" value={formData.power_kw || ""} onChange={(e) => setFormData({ ...formData, power_kw: e.target.value })} />
+                    <label>Copertura (PAX)</label>
+                    <input type="number" value={formData.pax || ""} onChange={(e) => setFormData({ ...formData, pax: e.target.value })} />
+                  </div>
+                  <div className={styles.formColumn}>
+                    <label>SPL Max (dB)</label>
+                    <input type="number" value={formData.spl || ""} onChange={(e) => setFormData({ ...formData, spl: e.target.value })} />
+                    <label>Tipologia</label>
+                    <input type="text" value={formData.tipologia || ""} onChange={(e) => setFormData({ ...formData, tipologia: e.target.value })} />
+                    <label>Risposta in frequenza</label>
+                    <input type="text" value={formData.risposta || ""} onChange={(e) => setFormData({ ...formData, risposta: e.target.value })} />
                   </div>
                   <div className={styles.formColumn}>
                     <label>Prezzo originale ({currency})</label>
@@ -884,7 +1034,7 @@ case "DJ":
                 </div>
               )}
 
-              {/* LUCI */}
+                            {/* LUCI */}
               {activeTab === "LUCI" && (
                 <div className={styles.formGrid3}>
                   <div className={styles.formColumn}>
@@ -924,26 +1074,24 @@ case "DJ":
                 </div>
               )}
 
-              {/* AUDIO */}
-              {activeTab === "AUDIO" && (
+              {/* PALCHI */}
+              {activeTab === "PALCHI" && (
                 <div className={styles.formGrid3}>
                   <div className={styles.formColumn}>
                     <label>Nome componente</label>
                     <input type="text" value={formData.name || ""} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                    <label>Marchio</label>
-                    <input type="text" value={formData.brand || ""} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} />
-                    <label>Potenza RMS (W)</label>
-                    <input type="number" value={formData.power_kw || ""} onChange={(e) => setFormData({ ...formData, power_kw: e.target.value })} />
-                    <label>Copertura (PAX)</label>
-                    <input type="number" value={formData.pax || ""} onChange={(e) => setFormData({ ...formData, pax: e.target.value })} />
+                    <label>Lunghezza (m)</label>
+                    <input type="number" value={formData.lunghezza || ""} onChange={(e) => setFormData({ ...formData, lunghezza: e.target.value })} />
+                    <label>Larghezza (m)</label>
+                    <input type="number" value={formData.larghezza || ""} onChange={(e) => setFormData({ ...formData, larghezza: e.target.value })} />
                   </div>
                   <div className={styles.formColumn}>
-                    <label>SPL Max (dB)</label>
-                    <input type="number" value={formData.spl || ""} onChange={(e) => setFormData({ ...formData, spl: e.target.value })} />
-                    <label>Tipologia</label>
-                    <input type="text" value={formData.tipologia || ""} onChange={(e) => setFormData({ ...formData, tipologia: e.target.value })} />
-                    <label>Risposta in frequenza</label>
-                    <input type="text" value={formData.risposta || ""} onChange={(e) => setFormData({ ...formData, risposta: e.target.value })} />
+                    <label>Altezza (m)</label>
+                    <input type="number" value={formData.altezza || ""} onChange={(e) => setFormData({ ...formData, altezza: e.target.value })} />
+                    <label>Peso (kg)</label>
+                    <input type="number" value={formData.peso || ""} onChange={(e) => setFormData({ ...formData, peso: e.target.value })} />
+                    <label>Marchio</label>
+                    <input type="text" value={formData.brand || ""} onChange={(e) => setFormData({ ...formData, brand: e.target.value })} />
                   </div>
                   <div className={styles.formColumn}>
                     <label>Prezzo originale ({currency})</label>
@@ -958,8 +1106,12 @@ case "DJ":
                 </div>
               )}
 
-              {/* DJ/ARTISTA */}
-             {activeTab === "DJ" && (
+
+
+
+
+              {/* Artisti */}
+             {activeTab === "ARTISTI" && (
   <div className={styles.formGrid3}>
     <div className={styles.formColumn}>
       <label>Nome artista</label>

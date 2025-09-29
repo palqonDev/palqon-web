@@ -223,13 +223,42 @@
   color: #fff;
 }
 
-/* colori tag categoria */
-.tag-PALCO { background: #f97316; color: #1e293b; }
-.tag-LUCI { background: #facc15; color: #1e293b; }
-.tag-AUDIO { background: #4ade80; color: #1e293b; }
-.tag-DJ { background: #f472b6; }
-.tag-ALTRO { background: #94a3b8; }
-.tag-BUNDLE { background: #8b5cf6; color: #fff; }
+/* --- COLORI TAG CATEGORIA (coerenti con home) --- */
+.tag-LOCATION {
+  background: linear-gradient(135deg, #FF6B6B, #FF006E);
+  color: #fff;
+}
+
+.tag-AUDIO {
+  background: linear-gradient(135deg, #007BFF, #00D4FF);
+  color: #fff;
+}
+
+.tag-LUCI {
+  background: linear-gradient(135deg, #FFD93D, #FFB347);
+  color: #1e293b;
+}
+
+.tag-PALCHI {
+  background: linear-gradient(135deg, #6A4C93, #8E44AD);
+  color: #fff;
+}
+
+.tag-ARTISTI {
+  background: linear-gradient(135deg, #FF8C42, #FF5E57);
+  color: #fff;
+}
+
+.tag-BUNDLE {
+  background: linear-gradient(135deg, #2ECC71, #00B894);
+  color: #fff;
+}
+
+.tag-ALTRO {
+  background: linear-gradient(135deg, #95A5A6, #7F8C8D);
+  color: #fff;
+}
+
 
 .badgesUnder {
   display: flex;

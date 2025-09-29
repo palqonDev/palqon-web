@@ -1,0 +1,68 @@
+.why {
+  padding: 4rem 2rem;   /* più spazio sopra/sotto */
+  position: relative;
+  overflow: visible;    /* consente alle card di uscire senza essere tagliate */
+}
+
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(0,175,255,0.6);
+}
+
+.brand {
+  color: #00afff;
+  text-shadow: 0 0 10px #00afff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.card {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(0,175,255,0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(8px);
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 30px rgba(0,175,255,0.5);
+  z-index: 2; /* porta la card sopra alle altre */
+}
+
+
+.icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  color: #00afff;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-size: 1rem;
+  color: #cbd5e1;
+}

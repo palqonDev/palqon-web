@@ -1,0 +1,103 @@
+.footer {
+  margin-top: 4rem;
+  background: linear-gradient(180deg, #0f172a, #1e293b);
+  padding: 4rem 2rem 2rem;
+  color: #f1f5f9;
+  border-top: 1px solid rgba(0,175,255,0.25);
+  backdrop-filter: blur(6px);
+}
+
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.footer h4 {
+  margin-bottom: 1rem;
+  color: #00afff;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer ul li {
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.footer ul li a {
+  color: #f1f5f9;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer ul li a:hover {
+  color: #00afff;
+}
+
+.description {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+.socials a {
+  font-size: 1.5rem;
+  margin-right: 0.8rem;
+  transition: transform 0.2s ease;
+}
+.socials a:hover {
+  transform: scale(1.2);
+  color: #00afff;
+}
+
+.newsletter {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+.newsletter input {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background: #1e293b;
+  color: #fff;
+}
+.newsletter button {
+  background: linear-gradient(to right, #007bff, #00afff);
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+.newsletter button:hover {
+  opacity: 0.9;
+}
+
+.bottomBar {
+  border-top: 1px solid #334155;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.logo {
+  filter: drop-shadow(0 0 12px rgba(0,175,255,0.4));
+  transition: transform 0.3s ease;
+}
+.logo:hover {
+  transform: scale(1.05);
+}

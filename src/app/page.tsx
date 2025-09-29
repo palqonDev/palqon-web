@@ -8,6 +8,11 @@ import Hero from "@/components/Hero"
 import SearchForm from "@/components/SearchForm"
 import Highlights from "@/components/Highlights"
 import ReviewList from "@/components/Review"
+import Offers from "@/components/Offers"
+import Categories from "@/components/Categories"
+import WhyPalqOn from "@/components/WhyPalqOn"
+import Footer from "@/components/Footer"
+
 
 type Seller = { id: string; company_name: string; city: string }
 type Component = { id: string; name: string; price_1day: number; photo_url: string; sellers: Seller }
@@ -85,26 +90,29 @@ export default function HomePage() {
     router.push(`/components?${query}`)
   }
 
-  return (
-    <>
-      <Hero />
-      <SearchForm
-        city={city}
-        setCity={setCity}
-        dateStart={dateStart}
-        setDateStart={setDateStart}
-        dateEnd={dateEnd}
-        setDateEnd={setDateEnd}
-        timeStart={timeStart}
-        setTimeStart={setTimeStart}
-        timeEnd={timeEnd}
-        setTimeEnd={setTimeEnd}
-        category={category}
-        handleCategoryChange={handleCategoryChange}
-        handleSearch={handleSearch}
-      />
-      <Highlights data={featuredComponents} />
-      <ReviewList data={reviews} />
-    </>
-  )
+return (
+  <>
+    <Hero />
+    <Categories />
+    <SearchForm
+      city={city}
+      setCity={setCity}
+      dateStart={dateStart}
+      setDateStart={setDateStart}
+      dateEnd={dateEnd}
+      setDateEnd={setDateEnd}
+      timeStart={timeStart}
+      setTimeStart={setTimeStart}
+      timeEnd={timeEnd}
+      setTimeEnd={setTimeEnd}
+      category={category}
+      handleCategoryChange={handleCategoryChange}
+      handleSearch={handleSearch}
+    />
+    
+    <WhyPalqOn />
+    <ReviewList data={reviews} />
+    <Footer />
+  </>
+)
 }

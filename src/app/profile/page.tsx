@@ -39,11 +39,14 @@ state: "",
     account_holder: "",
 
     // Attività e settore
-    category_audio: false,
-    category_luci: false,
-    category_palchi: false,
-    category_dj: false,
-    category_attrezzatura: false,
+category_location: false,
+category_audio: false,
+category_luci: false,
+category_palchi: false,
+category_artisti: false,
+category_bundle: false,
+category_altro: false,
+
 
     // Altro
     business_description: "",
@@ -98,7 +101,7 @@ const [newComponent, setNewComponent] = useState({
   freq_response: "",
   mixer_incluso: "",
 
-  // DJ / Artista
+  //Artisti
   artist_name: "",
   genre: "",
   durata: "",
@@ -118,6 +121,10 @@ const [newComponent, setNewComponent] = useState({
   const [clientStats, setClientStats] = useState({ active: 0, spent: 0, reviews: 0 })
   const [myOrders, setMyOrders] = useState<any[]>([])
   const [myGivenReviews, setMyGivenReviews] = useState<any[]>([])
+
+  const [totalSpent, setTotalSpent] = useState(0)
+  const [totalReceived, setTotalReceived] = useState(0)
+
 
 
   const {
@@ -149,62 +156,79 @@ setFormData((prev) => ({
 }
 
 
-  useEffect(() => {
-    const getUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        const { data } = await supabase
-          .from("users")
-          .select("*")
-          .eq("id", session.user.id)
-          .single()
-        if (data) {
-          setUser(data)
-          setFormData({
-            // Identità di base
-            name: data.name || "",
-            phone: data.phone || "",
-            address: data.address || "",
+useEffect(() => {
+  const getUser = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
 
-            // Dati aziendali
-            company_name: data.company_name || "",
-            vat_number: data.vat_number || "",
-            city_name: data.city_name || "",
-            city_lat: data.city_lat || null,
-            city_lng: data.city_lng || null,
-            state: data.state || "",
+    if (session?.user) {
+      // recupero profilo
+      const { data } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", session.user.id)
+        .single()
 
-            // Dati fiscali
-            iban: data.iban || "",
-            account_holder: data.account_holder || "",
+      if (data) {
+        setUser(data)
+        setFormData({
+          name: data.name || "",
+          phone: data.phone || "",
+          address: data.address || "",
+          company_name: data.company_name || "",
+          vat_number: data.vat_number || "",
+          city_name: data.city_name || "",
+          city_lat: data.city_lat || null,
+          city_lng: data.city_lng || null,
+          state: data.state || "",
+          iban: data.iban || "",
+          account_holder: data.account_holder || "",
+          category_audio: data.category_audio || false,
+          category_luci: data.category_luci || false,
+          category_palchi: data.category_palchi || false,
+          category_artisti: data.category_artisti || false,
+          category_attrezzatura: data.category_attrezzatura || false,
+          business_description: data.business_description || "",
+          role: data.role || "client",
+        })
 
-            // Attività e settore
-            category_audio: data.category_audio || false,
-            category_luci: data.category_luci || false,
-            category_palchi: data.category_palchi || false,
-            category_dj: data.category_dj || false,
-            category_attrezzatura: data.category_attrezzatura || false,
+        setValue(data.city_name || "", false)
 
-            // Altro
-            business_description: data.business_description || "",
-            role: data.role || "client",
-          })
+        await fetchClientData(data.id)
 
-           setValue(data.city_name || "", false)
+        // 🔹 nuovo: calcolo spese/ricavi solo su booking confermati e pagati
+// totale speso (come cliente)
+const { data: spent } = await supabase
+  .from("bookings")
+  .select("total_price")
+  .eq("client_id", data.id)
+  .eq("status", "confirmed")
+  .eq("last_payment_status", "paid")
 
-           await fetchClientData(data.id)
+setTotalSpent(spent?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 0)
 
-          if (data.role === "seller") {
-            await fetchStats(data.id)
-          }
+// totale ricevuto (come seller)
+const { data: received } = await supabase
+  .from("bookings")
+  .select("total_price")
+  .eq("seller_id", data.id)
+  .eq("status", "confirmed")
+  .eq("last_payment_status", "paid")
+
+setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 0)
+
+
+        if (data.role === "seller") {
+          await fetchStats(data.id)
         }
-
-
       }
-      setLoading(false)
     }
-    getUser()
-  }, [])
+
+    setLoading(false)
+  }
+
+  getUser()
+}, [])
+
 
   const fetchStats = async (sellerId: string) => {
     const { count: bookingsCount } = await supabase
@@ -503,7 +527,7 @@ const isSellerDataComplete = () => {
           </div>
           <div className={styles.card}>
             Spesa totale<br />
-            <strong>€ {clientStats.spent.toFixed(2)}</strong>
+            <strong>€ {totalSpent.toFixed(2)}</strong>
           </div>
           <div className={styles.card}>
             Recensioni lasciate<br />
@@ -607,6 +631,51 @@ const isSellerDataComplete = () => {
           <button type="submit">Salva modifiche</button>
         </form>
 
+        {/* Diventa Seller */}
+<section className={styles.block}>
+  <h3>Vuoi diventare un Seller?</h3>
+  <form
+    onSubmit={handleUpdateProfile}
+    className={styles.sellerForm}
+  >
+    <input
+      type="text"
+      placeholder="Nome azienda"
+      value={formData.company_name}
+      onChange={(e) =>
+        setFormData({ ...formData, company_name: e.target.value })
+      }
+    />
+    <input
+      type="text"
+      placeholder="Partita IVA"
+      value={formData.vat_number}
+      onChange={(e) =>
+        setFormData({ ...formData, vat_number: e.target.value })
+      }
+    />
+    <textarea
+      placeholder="Descrizione attività"
+      value={formData.business_description}
+      onChange={(e) =>
+        setFormData({
+          ...formData,
+          business_description: e.target.value,
+        })
+      }
+    />
+    <button
+      type="submit"
+      onClick={() =>
+        setFormData((prev) => ({ ...prev, role: "seller" }))
+      }
+    >
+      Diventa Seller
+    </button>
+  </form>
+</section>
+
+
         {/* Metodo di pagamento */}
         <section className={styles.block}>
           <h3>Metodo di pagamento</h3>
@@ -649,7 +718,7 @@ const isSellerDataComplete = () => {
           </div>
           <div className={styles.card}>
             Entrate totali<br />
-            <strong>€ {stats.revenue}</strong>
+            <strong>€ {totalReceived.toFixed(2)}</strong>
           </div>
           <div className={styles.card}>
             Recensioni<br />

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react"
 import Link from "next/link"
+import { HelpCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { supabase } from "@/supabaseClient"
 import styles from "./Navbar.module.css"
@@ -127,9 +128,11 @@ export default function Navbar() {
           </Link>
 
           {/* FAQ */}
-          <Link href="/faq" className={styles.faq}>
-            <span className={styles.faqIcon}>?</span>
-          </Link>
+          <div className={styles.faq}>
+  <button className={styles.faqIcon} aria-label="FAQ">
+    <HelpCircle size={20} />
+  </button>
+</div>
 
           {/* NEWS TICKER */}
           <div className={styles.newsTicker}>

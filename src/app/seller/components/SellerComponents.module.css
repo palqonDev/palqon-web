@@ -220,12 +220,6 @@
   color: #fff;
 }
 
-.tag-PALCO { background: #f97316; color: #1e293b; }   /* arancione */
-.tag-LUCI { background: #facc15; color: #1e293b; }
-.tag-AUDIO { background: #4ade80; color: #1e293b; }
-.tag-DJ { background: #f472b6; }
-.tag-ALTRO { background: #94a3b8; }
-.tag-BUNDLE { background: #8b5cf6; color: #fff; }     /* viola */
 
 /* Prezzi */
 .priceBox {
@@ -502,11 +496,29 @@
 .activeTab { box-shadow: 0 0 12px rgba(0, 0, 0, 0.6); }
 
 /* Colori attivi coerenti alle categorie */
-.categoryTab.activeTab:nth-child(1) { background: #9333ea; } /* PALCO */
-.categoryTab.activeTab:nth-child(2) { background: #facc15; color:#000; } /* LUCI */
-.categoryTab.activeTab:nth-child(3) { background: #00afff; } /* AUDIO */
-.categoryTab.activeTab:nth-child(4) { background: #ff006e; } /* DJ */
-.categoryTab.activeTab:nth-child(5) { background: #64748b; } /* ALTRO */
+.categoryTab.activeTab:nth-child(1) { 
+  background: linear-gradient(135deg, #FF6B6B, #FF006E); /* LOCATION */
+}
+.categoryTab.activeTab:nth-child(2) { 
+  background: linear-gradient(135deg, #007BFF, #00D4FF); /* AUDIO */
+}
+.categoryTab.activeTab:nth-child(3) { 
+  background: linear-gradient(135deg, #FFD93D, #FFB347); 
+  color: #000; /* LUCI */
+}
+.categoryTab.activeTab:nth-child(4) { 
+  background: linear-gradient(135deg, #6A4C93, #8E44AD); /* PALCO */
+}
+.categoryTab.activeTab:nth-child(5) { 
+  background: linear-gradient(135deg, #FF8C42, #FF5E57); /* ARTISTI */
+}
+.categoryTab.activeTab:nth-child(6) { 
+  background: linear-gradient(135deg, #2ECC71, #00B894); /* BUNDLE */
+}
+.categoryTab.activeTab:nth-child(7) { 
+  background: linear-gradient(135deg, #95A5A6, #7F8C8D); /* ALTRO */
+}
+
 
 .radioGroup {
   display: flex;
@@ -651,18 +663,20 @@
 
 
 .bundleBtn {
-  background: #8b5cf6; /* viola */
+  background: linear-gradient(135deg, #2ECC71, #00B894); /* stesso colore del tag BUNDLE */
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
   color: white;
-  font-weight: 500;
-  transition: background 0.2s ease;
+  font-weight: 600;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 .bundleBtn:hover {
-  background: #7c3aed;
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
+
 
 /* --- MODAL BUNDLE --- */
 .bundleSearch {
@@ -804,12 +818,14 @@
   font-size: 0.75rem;
   font-weight: 600;
 }
-.tag-PALCO { background: #f97316; color: #1e293b; }   /* arancione */
-.tag-LUCI { background: #facc15; color: #1e293b; }
-.tag-AUDIO { background: #4ade80; color: #1e293b; }
-.tag-DJ { background: #f472b6; }
-.tag-ALTRO { background: #94a3b8; }
-.tag-BUNDLE { background: #8b5cf6; color: #fff; }     /* viola */
+.tag-LOCATION { background: linear-gradient(135deg, #FF6B6B, #FF006E); color: #fff; }
+.tag-AUDIO { background: linear-gradient(135deg, #007BFF, #00D4FF); color: #fff; }
+.tag-LUCI { background: linear-gradient(135deg, #FFD93D, #FFB347); color: #1e293b; }
+.tag-PALCO { background: linear-gradient(135deg, #6A4C93, #8E44AD); color: #fff; }
+.tag-ARTISTI { background: linear-gradient(135deg, #FF8C42, #FF5E57); color: #fff; }
+.tag-BUNDLE { background: linear-gradient(135deg, #2ECC71, #00B894); color: #fff; }
+.tag-ALTRO { background: linear-gradient(135deg, #95A5A6, #7F8C8D); color: #fff; }
+
 
 /* Totali del bundle */
 .bundleTotals {

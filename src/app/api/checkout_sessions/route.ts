@@ -1,27 +1,42 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-09-30", // aggiorna se serve
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2023-10-16",
 });
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const { bookingId, total } = await req.json();
 
+    if (!bookingId || !total) {
+      return NextResponse.json(
+        { error: "Missing bookingId or total" },
+        { status: 400 }
+      );
+    }
+
+    // crea la sessione di pagamento su Stripe
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: body.line_items, // [{ price: "price_xxx", quantity: 1 }]
+      line_items: [
+        {
+          price_data: {
+            currency: "eur",
+            product_data: { name: `Prenotazione #${bookingId}` },
+            unit_amount: Math.round(total * 100), // in centesimi
+          },
+          quantity: 1,
+        },
+      ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?bookingId=${bookingId}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/cancel`,
+      metadata: { bookingId }, // 👈 serve per il webhook
     });
 
-    return NextResponse.json({ id: session.id });
+    return NextResponse.json({ url: session.url });
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err.message },
-      { status: err.statusCode || 500 }
-    );
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

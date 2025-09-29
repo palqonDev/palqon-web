@@ -1,0 +1,58 @@
+.container {
+  background: #0f172a;
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  max-width: 600px;
+  margin: 2rem auto;
+  font-family: 'Poppins', sans-serif;
+}
+
+h2 {
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #00afff;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+label {
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.cardBox {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.saveBtn {
+  background: #00afff;
+  border: none;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+.saveBtn:hover {
+  background: #0284c7;
+  transform: translateY(-1px);
+}
+
+.message {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #38bdf8;
+  text-align: center;
+}

@@ -1,42 +1,94 @@
 .wrapper {
-  padding: 4rem 1.5rem;
-  background-color: #0f172a;
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
   border-radius: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 1400px;
+  margin: 3rem auto;
+  position: relative;
 }
 
 .title {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+  color: #fff;
+  text-shadow: 0 0 15px rgba(0,175,255,0.6);
 }
 
 .grid {
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 .card {
-  background-color: #1e293b;
-  border-radius: 1rem;
-  padding: 1.5rem;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(0,175,255,0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 0 25px rgba(0,175,255,0.5);
+}
+
+.userBox {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.avatar {
+  border-radius: 50%;
+  border: 2px solid #00afff;
+}
+
+.user {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00afff;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: #94a3b8;
 }
 
 .stars {
-  color: #facc15; /* giallo stella */
-  font-size: 1.2rem;
+  color: #facc15;
+  font-size: 1.3rem;
+  margin: 0.5rem 0;
 }
 
 .comment {
   font-style: italic;
   color: #e2e8f0;
-  margin: 0.5rem 0;
+  font-size: 1rem;
+  margin-top: 0.5rem;
 }
 
-.user {
-  font-size: 0.9rem;
-  color: #94a3b8;
+.ctaBox {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.ctaBtn {
+  background: linear-gradient(to right, #007bff, #00afff);
+  color: white;
+  padding: 0.8rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ctaBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00afff;
 }

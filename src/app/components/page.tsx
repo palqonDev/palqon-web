@@ -9,6 +9,8 @@ import styles from "./ComponentsList.module.css"
 
 
 
+
+
 // Questo è l’export che Next.js usa per la pagina
 export default function ComponentsResultsPageWrapper() {
   return (
@@ -116,6 +118,10 @@ const autocompleteRef = useRef<HTMLInputElement>(null)
 const [components, setComponents] = useState<Component[]>([])
 const [loading, setLoading] = useState(true)
 
+const [dateStart, setDateStart] = useState("")
+const [dateEnd, setDateEnd] = useState("")
+
+
 
   
 
@@ -129,129 +135,141 @@ const [loading, setLoading] = useState(true)
   setEventLat(null)
   setEventLng(null)
   setEventPlace("")
+  setDateStart("")
+  setDateEnd("")
 }
 
   // fetch componenti + reviews summary + user profile
 useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
+  const fetchData = async () => {
+    setLoading(true)
 
-      // --- componenti ---
-let query = supabase
-  .from("components")
-  .select(`
-    id, name, description, price_1day, price_original, images, type, indoor, outdoor,
-    power_kw, phase, connector, free_radius_km, extra_cost_per_km,
-    peso, assorbimento, lunghezza, larghezza, altezza,
-    brand, tipologia, controllo, pax, spl, risposta, genere, durata,
-    console, attrezzatura, quantita, materiale, console_modello,
-    users ( id, company_name, city_name, city_lat, city_lng )
-  `)
+    // --- componenti ---
+    let query = supabase
+      .from("components")
+      .select(`
+        id, name, description, price_1day, price_original, images, type, indoor, outdoor,
+        power_kw, phase, connector, free_radius_km, extra_cost_per_km,
+        peso, assorbimento, lunghezza, larghezza, altezza,
+        brand, tipologia, controllo, pax, spl, risposta, genere, durata,
+        console, attrezzatura, quantita, materiale, console_modello,
+        users ( id, company_name, city_name, city_lat, city_lng )
+      `)
 
+    query = query.eq("status", "active" as any)
 
-       query = query.eq("status", "active" as any)
-
-
-      if (category && category !== "all") {
-        query = query.eq("type", category)
-      }
-      if (search) {
-        query = query.ilike("name", `%${search}%`)
-      }
-      if (minPrice) {
-        query = query.gte("price_1day", parseFloat(minPrice))
-      }
-      if (maxPrice) {
-        query = query.lte("price_1day", parseFloat(maxPrice))
-      }
-
-      const { data: comps, error } = await query
-
-      console.log("RAW COMPONENTS FROM DB:", { comps, error })
-
-      if (error) {
-        console.error("Errore fetch components:", error)
-        setComponents([])
-        setLoading(false)
-        return
-      }
-
-      let results = (comps as unknown as Component[]) || []
-
-      console.log("AFTER ASSIGNING RESULTS:", results)
-
-      // ordinamento
-      if (sortBy === "priceAsc") results.sort((a, b) => a.price_1day - b.price_1day)
-      if (sortBy === "priceDesc") results.sort((a, b) => b.price_1day - a.price_1day)
-      if (sortBy === "nameAsc") results.sort((a, b) => a.name.localeCompare(b.name))
-      if (sortBy === "distance" && eventLat && eventLng) {
-          results.sort((a, b) => (a.distance || 0) - (b.distance || 0))
-}
-
-// calcolo distanza e filtro raggio
-if (eventLat != null && eventLng != null) {
-  results = results
-    .map((c) => {
-      const slat = c.users?.city_lat ? Number(c.users.city_lat) : null
-const slng = c.users?.city_lng ? Number(c.users.city_lng) : null
-      if (slat == null || slng == null) return c
-      const dist = getDistanceKm(eventLat, eventLng, slat, slng)
-      return { ...c, distance: parseFloat(dist.toFixed(1)) }
-    })
-
-  if (radiusKm && !isNaN(Number(radiusKm))) {
-    const maxDist = Number(radiusKm)
-    results = results.filter(
-      (c) => c.distance != null && c.distance <= maxDist
-    )
-  }
-
-   console.log("AFTER DISTANCE FILTER:", results)
-}
-
-
-      // --- reviews summary ---
-      const { data: summaries, error: err2 } = await supabase
-        .from("seller_reviews_summary") // view con avg + count
-        .select("user_id, review_count, avg_rating")
-
-      if (err2) {
-        console.error("Errore fetch summaries:", err2)
-      }
-
-      // --- users profile ---
-      const { data: usersData, error: err3 } = await supabase
-        .from("users")
-        .select("id, name, avatar_url")
-
-      if (err3) {
-        console.error("Errore fetch users:", err3)
-      }
-
-      // merge reviews summary + user profile nei componenti
-      if (summaries || usersData) {
-        results = results.map((c) => {
-          const summary = summaries?.find((s) => s.user_id === c.users?.id)
-const user = usersData?.find((u) => u.id === c.users?.id)
-
-          return {
-            ...c,
-            review_count: summary?.review_count || 0,
-            avg_rating: summary
-              ? parseFloat(summary.avg_rating as any).toFixed(1)
-              : "0.0",
-            seller_name: user?.name || "Referente",
-            seller_avatar: user?.avatar_url || "/default-avatar.png",
-          }
-        })
-      }
-
-      setComponents(results)
-      setLoading(false)
+    if (category && category !== "all") {
+      query = query.eq("type", category)
+    }
+    if (search) {
+      query = query.ilike("name", `%${search}%`)
+    }
+    if (minPrice) {
+      query = query.gte("price_1day", parseFloat(minPrice))
+    }
+    if (maxPrice) {
+      query = query.lte("price_1day", parseFloat(maxPrice))
     }
 
-    fetchData()
-  }, [
+    const { data: comps, error } = await query
+
+    console.log("RAW COMPONENTS FROM DB:", { comps, error })
+
+    if (error) {
+      console.error("Errore fetch components:", error)
+      setComponents([])
+      setLoading(false)
+      return
+    }
+
+    let results = (comps as unknown as Component[]) || []
+
+    console.log("AFTER ASSIGNING RESULTS:", results)
+
+    // ordinamento
+    if (sortBy === "priceAsc") results.sort((a, b) => a.price_1day - b.price_1day)
+    if (sortBy === "priceDesc") results.sort((a, b) => b.price_1day - a.price_1day)
+    if (sortBy === "nameAsc") results.sort((a, b) => a.name.localeCompare(b.name))
+    if (sortBy === "distance" && eventLat && eventLng) {
+      results.sort((a, b) => (a.distance || 0) - (b.distance || 0))
+    }
+
+    // calcolo distanza e filtro raggio
+    if (eventLat != null && eventLng != null) {
+      results = results
+        .map((c) => {
+          const slat = c.users?.city_lat ? Number(c.users.city_lat) : null
+          const slng = c.users?.city_lng ? Number(c.users.city_lng) : null
+          if (slat == null || slng == null) return c
+          const dist = getDistanceKm(eventLat, eventLng, slat, slng)
+          return { ...c, distance: parseFloat(dist.toFixed(1)) }
+        })
+
+      if (radiusKm && !isNaN(Number(radiusKm))) {
+        const maxDist = Number(radiusKm)
+        results = results.filter(
+          (c) => c.distance != null && c.distance <= maxDist
+        )
+      }
+
+      console.log("AFTER DISTANCE FILTER:", results)
+    }
+
+    // --- 🔹 nuovo filtro disponibilità con date ---
+    if (dateStart && dateEnd) {
+      const { data: booked, error: errBooked } = await supabase
+        .from("availability")
+        .select("component_id")
+         .or(`and(start_time.lt.${dateEnd},end_time.gt.${dateStart})`)
+
+      if (!errBooked && booked) {
+        const bookedIds = booked.map((b) => b.component_id)
+        results = results.filter((c) => !bookedIds.includes(c.id))
+      }
+    }
+
+    // --- reviews summary ---
+    const { data: summaries, error: err2 } = await supabase
+      .from("seller_reviews_summary") // view con avg + count
+      .select("user_id, review_count, avg_rating")
+
+    if (err2) {
+      console.error("Errore fetch summaries:", err2)
+    }
+
+    // --- users profile ---
+    const { data: usersData, error: err3 } = await supabase
+      .from("users")
+      .select("id, name, avatar_url")
+
+    if (err3) {
+      console.error("Errore fetch users:", err3)
+    }
+
+    // merge reviews summary + user profile nei componenti
+    if (summaries || usersData) {
+      results = results.map((c) => {
+        const summary = summaries?.find((s) => s.user_id === c.users?.id)
+        const user = usersData?.find((u) => u.id === c.users?.id)
+
+        return {
+          ...c,
+          review_count: summary?.review_count || 0,
+          avg_rating: summary
+            ? parseFloat(summary.avg_rating as any).toFixed(1)
+            : "0.0",
+          seller_name: user?.name || "Referente",
+          seller_avatar: user?.avatar_url || "/default-avatar.png",
+        }
+      })
+    }
+
+    setComponents(results)
+    setLoading(false)
+  }
+
+  fetchData()
+}, [
   search,
   category,
   minPrice,
@@ -260,7 +278,10 @@ const user = usersData?.find((u) => u.id === c.users?.id)
   eventLat,
   eventLng,
   sortBy,
+  dateStart,   // 🔹 aggiunto
+  dateEnd      // 🔹 aggiunto
 ])
+
 
 useEffect(() => {
   const params = new URLSearchParams()
@@ -276,12 +297,15 @@ useEffect(() => {
   }
   if (eventPlace) params.set("event_city", eventPlace)
   if (sortBy !== "default") params.set("sortBy", sortBy)
+  // 🔹 aggiunte per date
+  if (dateStart) params.set("date_start", dateStart)
+  if (dateEnd) params.set("date_end", dateEnd)
 
   // solo se ci sono parametri, aggiorna URL
   if ([...params.keys()].length > 0) {
     router.push(`/components?${params.toString()}`)
   }
-}, [search, category, minPrice, maxPrice, radiusKm, eventLat, eventLng, eventPlace, sortBy])
+}, [search, category, minPrice, maxPrice, radiusKm, eventLat, eventLng, eventPlace, sortBy, dateStart, dateEnd])
 
 
 useEffect(() => {
@@ -354,12 +378,27 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
 />
 
 <input
+  type="date"
+  className={styles.priceInput}
+  value={dateStart}
+  onChange={(e) => setDateStart(e.target.value)}
+/>
+
+<input
+  type="date"
+  className={styles.priceInput}
+  value={dateEnd}
+  onChange={(e) => setDateEnd(e.target.value)}
+/>
+
+<input
   type="number"
   className={styles.priceInput}
   placeholder="Raggio (km)"
   value={radiusKm}
   onChange={(e) => setRadiusKm(e.target.value)}
 />
+
 
 
 
@@ -381,18 +420,18 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
 />
 
 <select
-  className={styles.selectStyled}
   value={category}
   onChange={(e) => setCategory(e.target.value)}
-
-
+  className={styles.select}
 >
   <option value="all">Tutte le categorie</option>
-  <option value="AUDIO">Audio</option>
-  <option value="LUCI">Luci</option>
-  <option value="PALCO">Palchi</option>
-  <option value="DJ">DJ</option>
-  <option value="BUNDLE">Bundle</option>
+  <option value="location">Location</option>
+  <option value="audio">Audio</option>
+  <option value="luci">Luci</option>
+  <option value="palchi">Palchi</option>
+  <option value="artisti">Artisti</option>
+  <option value="bundle">Bundle</option>
+  <option value="altro">Altro</option>
 </select>
 
 <select
@@ -573,10 +612,10 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
         {/* colonna prezzo/tag */}
         <div className={styles.priceTagColumn}>
           <div className={styles.categoryTagWrapper}>
-            <span
-              className={`${styles.categoryTag} ${styles[`tag-${c.type}`]}`}
+          <span
+            className={`${styles.categoryTag} ${styles[`tag-${c.type?.toUpperCase()}`]}`}
             >
-              {c.type}
+              {c.type?.toUpperCase()}
             </span>
           </div>
           <div className={styles.badgesUnder}>
