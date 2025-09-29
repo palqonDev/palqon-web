@@ -9,12 +9,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
-h2 {
+.title h2 {
   margin-bottom: 1.5rem;
   font-weight: 600;
-  color: #00afff;
-  text-align: center;
 }
+
 
 .form {
   display: flex;
