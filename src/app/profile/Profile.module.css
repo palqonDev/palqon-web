@@ -559,3 +559,118 @@
   border-radius: 10px;
   padding: 0.8rem 1rem;
 }
+
+/* --- UPGRADE VISUALE --- */
+
+/* Glow avatar */
+.avatarBig {
+  box-shadow: 0 0 15px rgba(0,175,255,0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.avatarBig:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0,212,255,0.8);
+}
+
+/* Box generali più spettacolari */
+.clientBox,
+.sellerDashboard,
+.clientDashboard,
+.rightCol,
+.block,
+.supportBox {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  border: 1px solid #334155;
+  box-shadow: 0 0 20px rgba(0,175,255,0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.clientBox:hover,
+.sellerDashboard:hover,
+.clientDashboard:hover,
+.rightCol:hover,
+.block:hover,
+.supportBox:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px rgba(0,212,255,0.25);
+}
+
+/* Input spettacolari */
+.profileForm input,
+.profileForm textarea,
+.profileForm select,
+.sellerForm input,
+.sellerForm textarea {
+  border: 1px solid #334155;
+  transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.profileForm input:focus,
+.profileForm textarea:focus,
+.profileForm select:focus,
+.sellerForm input:focus,
+.sellerForm textarea:focus {
+  border: 1px solid #00afff;
+  background: #1e293b;
+  box-shadow: 0 0 10px rgba(0,175,255,0.5);
+}
+
+/* Cards seller animate */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 0 20px rgba(0,175,255,0.25);
+}
+
+/* Quick Actions gradient */
+.addBtn {
+  background: linear-gradient(135deg, #007BFF, #00D4FF);
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.addBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px rgba(0,212,255,0.4);
+}
+
+/* Modal glow */
+.modal {
+  border: 1px solid #334155;
+  box-shadow: 0 0 25px rgba(0,175,255,0.3);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+  .dashboardGrid {
+    grid-template-columns: 1fr;
+  }
+  .profileHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .quickActions {
+    flex-direction: column;
+  }
+  .quickActions .addBtn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+  .avatarBig {
+    width: 80px;
+    height: 80px;
+  }
+  .card strong {
+    font-size: 1rem;
+  }
+  .profileForm button,
+  .sellerForm button {
+    width: 100%;
+  }
+}
+

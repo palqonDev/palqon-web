@@ -1,0 +1,65 @@
+/* src/app/termini/Terms.module.css */
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  color: #1e293b;
+  background: #f9fafb;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #00afff;
+}
+
+.lastUpdate {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem;
+  color: #0b0e17;
+  border-bottom: 2px solid #00afff;
+  padding-bottom: 0.2rem;
+}
+
+.subTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  color: #334155;
+}
+
+p {
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+ul {
+  margin: 0.5rem 0 1rem 1.5rem;
+  list-style: disc;
+}
+
+strong {
+  color: #0f172a;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1.5rem 1rem;
+  }
+  .title {
+    font-size: 1.6rem;
+  }
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+}
