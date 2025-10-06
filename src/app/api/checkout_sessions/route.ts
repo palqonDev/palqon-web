@@ -9,12 +9,16 @@ export async function POST(req: Request) {
   try {
     const { bookingId, amount } = await req.json()
 
+    console.log("Checkout request:", { bookingId, amount })
+
     if (!amount || !bookingId) {
       return NextResponse.json(
-        { error: "Dati mancanti per creare la sessione di pagamento" },
+        { error: "Dati mancanti per creare la sessione" },
         { status: 400 }
       )
     }
+
+    const baseUrl = process.env.NEXT_PUBLIC_URL || "https://www.palqon.com"
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -29,12 +33,13 @@ export async function POST(req: Request) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_URL}/checkout/success?booking=${bookingId}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/checkout/cancel`,
+      success_url: `${baseUrl}/checkout/success?booking=${bookingId}`,
+      cancel_url: `${baseUrl}/checkout/cancel`,
       metadata: { bookingId },
     })
 
-    // ✅ Restituisce la URL corretta per il redirect
+    console.log("Checkout session created:", session.url)
+
     return NextResponse.json({ url: session.url })
   } catch (err: any) {
     console.error("Errore creazione checkout session:", err.message)
