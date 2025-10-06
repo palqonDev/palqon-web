@@ -20,23 +20,27 @@ export async function POST(req: Request) {
 
     const baseUrl = process.env.NEXT_PUBLIC_URL || "https://www.palqon.com"
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "eur",
-            product_data: { name: "Prenotazione PalqOn" },
-            unit_amount: Math.round(Number(amount) * 100),
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: `${baseUrl}/checkout/success?booking=${bookingId}`,
-      cancel_url: `${baseUrl}/checkout/cancel`,
-      metadata: { bookingId },
-    })
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ["card"],
+  line_items: [
+    {
+      price_data: {
+        currency: "eur",
+        product_data: { name: "Prenotazione PalqOn" },
+        unit_amount: Math.round(Number(amount) * 100),
+      },
+      quantity: 1,
+    },
+  ],
+  mode: "payment",
+  success_url: `${process.env.NEXT_PUBLIC_URL}/checkout/success?booking=${bookingId}`,
+  cancel_url: `${process.env.NEXT_PUBLIC_URL}/checkout/cancel`,
+  metadata: { bookingId }, // ✅ questo è fondamentale!
+  payment_intent_data: {
+    metadata: { bookingId }, // ✅ doppia sicurezza (per eventi payment_intent.succeeded)
+  },
+})
+
 
     console.log("Checkout session created:", session.url)
 
