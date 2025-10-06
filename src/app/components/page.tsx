@@ -153,11 +153,11 @@ useEffect(() => {
     peso, assorbimento, lunghezza, larghezza, altezza,
     brand, tipologia, controllo, pax, spl, risposta, genere, durata,
     console, attrezzatura, quantita, materiale, console_modello,
-    sellers!inner (
+    sellers!left (
       id,
       city,
       user_id,
-      users (
+      users!left (
         id,
         name,
         avatar_url,
@@ -652,17 +652,27 @@ function getDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
             <div className={styles.priceNote}>IVA inclusa</div>
 
             {/* seller referente + rating inline */}
-<Link href={`/seller/${c.users?.id}`} className={styles.sellerProfile}>
-              <img
-                src={c.seller_avatar}
-                alt={c.seller_name}
-                className={styles.sellerAvatar}
-              />
-              <span className={styles.sellerName}>{c.seller_name}</span>
-              <span className={styles.reviewsInline}>
-                ★ {c.avg_rating || "0.0"} ({c.review_count || 0})
-              </span>
-            </Link>
+<Link
+  href={`/seller/${c.sellers?.users?.id}`}
+  className={styles.sellerProfile}
+>
+  <img
+    src={
+      c.sellers?.users?.avatar_url
+        ? c.sellers.users.avatar_url
+        : "/default-avatar.png"
+    }
+    alt={c.sellers?.users?.name || "Seller"}
+    className={styles.sellerAvatar}
+  />
+  <span className={styles.sellerName}>
+    {c.sellers?.users?.name || "Referente non indicato"}
+  </span>
+  <span className={styles.reviewsInline}>
+    ★ {c.avg_rating || "0.0"} ({c.review_count || 0})
+  </span>
+</Link>
+
 
           <p>
             <span className={styles.value}>{c.users?.city_name}</span>
