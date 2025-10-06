@@ -131,13 +131,19 @@ const { data: comp } = await supabase
         }
       }
 
-      // bookings
-      const { data: bookingsData } = await supabase
-        .from("bookings")
-        .select("id, date_start, date_end, status")
-        .eq("component_id", id)
-        .in("status", ["pending", "confirmed"])
-      setBookings(bookingsData || [])
+// Recupera le prenotazioni confermate o già pagate per bloccare il calendario
+const { data: bookingsData, error: bookingsError } = await supabase
+  .from("bookings")
+  .select("id, date_start, date_end, status, last_payment_status")
+  .eq("component_id", id)
+  .or("status.eq.confirmed,last_payment_status.eq.paid")
+
+if (bookingsError) {
+  console.error("Errore caricamento prenotazioni:", bookingsError)
+}
+
+setBookings(bookingsData || [])
+
 
       // availability
       const { data: availData } = await supabase

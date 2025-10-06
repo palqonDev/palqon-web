@@ -317,14 +317,25 @@ setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 
 
   const fetchClientData = async (clientId: string) => {
   // prenotazioni come CLIENT
-  const { data: orders } = await supabase
-    .from("bookings")
-    .select("id, status, total_price, created_at, date_start, date_end, description")
-    .eq("client_id", clientId)
-    .order("created_at", { ascending: false })
-    .limit(5)
+  const { data: orders, error } = await supabase
+  .from("bookings")
+  .select(`
+    id,
+    date_start,
+    date_end,
+    total_price,
+    status,
+    last_payment_status,
+    components:booking_components(component_id, components(name, images))
+  `)
+  .eq("client_id", clientId)
+  .eq("last_payment_status", "paid") // solo pagati
+  .order("created_at", { ascending: false })
 
-  setMyOrders(orders || [])
+if (error) console.error(error)
+setMyOrders(orders || [])
+
+
 
   // spesa totale e attive
   const totalSpent =
@@ -535,27 +546,67 @@ const isSellerDataComplete = () => {
           </div>
         </section>
 
-        {/* I miei ordini */}
-        <section className={styles.block}>
-          <h3>I miei ordini</h3>
-          {myOrders.length > 0 ? (
-            <ul className={styles.ordersList}>
-              {myOrders.map((o) => (
-                <li key={o.id}>
-                  <span>#{o.id.slice(0, 8)}</span> •
-                  <span> {new Date(o.created_at).toLocaleDateString("it-IT")} </span> •
-                  <span className={styles.badgeStatus}>{o.status}</span> •
-                  <strong> € {Number(o.total_price || 0).toFixed(2)}</strong>
-                  <div className={styles.orderMeta}>
-                    {new Date(o.date_start).toLocaleDateString()} → {new Date(o.date_end).toLocaleDateString()}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Nessun ordine</p>
-          )}
-        </section>
+{/* Le mie prenotazioni */}
+<section className={styles.block}>
+  <h3>Le mie prenotazioni</h3>
+  {myOrders.length > 0 ? (
+    <ul className={styles.ordersList}>
+      {myOrders.map((o) => {
+        const component = o.components?.[0]?.components
+        return (
+          <li key={o.id} className={styles.orderCard}>
+            <Link href={`/components/${component?.id || ""}`} className={styles.orderLink}>
+              <div className={styles.orderMain}>
+                <div className={styles.orderHeader}>
+                  <span className={styles.componentName}>
+                    {component?.name || "Componente"}
+                  </span>
+                  <span
+                    className={`${styles.badgeStatus} ${
+                      o.last_payment_status === "paid"
+                        ? styles.badgePaid
+                        : o.status === "pending"
+                        ? styles.badgePending
+                        : styles.badgeDefault
+                    }`}
+                  >
+                    {o.last_payment_status === "paid"
+                      ? "Pagato"
+                      : o.status === "pending"
+                      ? "In attesa"
+                      : o.status === "confirmed"
+                      ? "Confermato"
+                      : o.status}
+                  </span>
+                </div>
+
+                <div className={styles.orderMeta}>
+                  {new Date(o.date_start).toLocaleDateString("it-IT")} →
+                  {new Date(o.date_end).toLocaleDateString("it-IT")}
+                </div>
+
+                <div className={styles.orderAmount}>
+                  € {Number(o.total_price || 0).toFixed(2)}
+                </div>
+              </div>
+
+              {component?.images?.[0] && (
+                <img
+                  src={component.images[0]}
+                  alt={component.name}
+                  className={styles.orderImage}
+                />
+              )}
+            </Link>
+          </li>
+        )
+      })}
+    </ul>
+  ) : (
+    <p>Nessuna prenotazione completata.</p>
+  )}
+</section>
+
 
         {/* Le mie recensioni */}
         <section className={styles.block}>
