@@ -147,14 +147,26 @@ useEffect(() => {
     // --- componenti ---
     let query = supabase
       .from("components")
-      .select(`
-        id, name, description, price_1day, price_original, images, type, indoor, outdoor,
-        power_kw, phase, connector, free_radius_km, extra_cost_per_km,
-        peso, assorbimento, lunghezza, larghezza, altezza,
-        brand, tipologia, controllo, pax, spl, risposta, genere, durata,
-        console, attrezzatura, quantita, materiale, console_modello,
-        users ( id, company_name, city_name, city_lat, city_lng )
-      `)
+  .select(`
+    id, name, description, price_1day, price_original, images, type, indoor, outdoor,
+    power_kw, phase, connector, free_radius_km, extra_cost_per_km,
+    peso, assorbimento, lunghezza, larghezza, altezza,
+    brand, tipologia, controllo, pax, spl, risposta, genere, durata,
+    console, attrezzatura, quantita, materiale, console_modello,
+    sellers!inner (
+      id,
+      city,
+      user_id,
+      users (
+        id,
+        name,
+        avatar_url,
+        city_name,
+        city_lat,
+        city_lng
+      )
+    )
+  `)
 
     query = query.eq("status", "active" as any)
 
