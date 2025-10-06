@@ -38,14 +38,19 @@ type Component = {
   attrezzatura?: string
   city_name?: string
 
-  users: {
+  sellers?: {
     id: string
-    name: string
-    avatar_url: string
-    company_name: string
-    city_name: string
+    user_id: string
+    users?: {
+      id: string
+      name: string
+      avatar_url: string
+      company_name: string
+      city_name: string
+    } | null
   } | null
 }
+
 
 type Booking = {
   id: string
@@ -80,21 +85,29 @@ export default function ComponentDetailPage() {
     const fetchData = async () => {
       setLoading(true)
 
-      // componente + user join
-      const { data: comp } = await supabase
-        .from("components")
-        .select(
-          `
-          id, name, description, price_1day, price_original, images, type, indoor, outdoor,
-          power_kw, phase, connector, free_radius_km, extra_cost_per_km,
-          peso, assorbimento, lunghezza, larghezza, altezza,
-          brand, tipologia, controllo, quantita, materiale, console_modello, attrezzatura,
-          city_name,
-          users ( id, name, avatar_url, company_name, city_name )
-        `
-        )
-        .eq("id", id)
-        .single()
+const { data: comp } = await supabase
+  .from("components")
+  .select(`
+    id, name, description, price_1day, price_original, images, type, indoor, outdoor,
+    power_kw, phase, connector, free_radius_km, extra_cost_per_km,
+    peso, assorbimento, lunghezza, larghezza, altezza,
+    brand, tipologia, controllo, quantita, materiale, console_modello, attrezzatura,
+    city_name,
+    sellers!inner (
+      id,
+      user_id,
+      users!inner (
+        id,
+        name,
+        avatar_url,
+        company_name,
+        city_name
+      )
+    )
+  `)
+  .eq("id", id)
+  .single()
+
 
       if (comp) {
         setComponent(comp as unknown as Component)

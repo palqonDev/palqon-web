@@ -56,21 +56,22 @@
   gap: 0.5rem;
 }
 
-/* --- CARD --- */
+/* --- CARD COMPONENTE --- */
 .componentCard {
   background: #1e293b;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  padding: 0.8rem;
   display: flex;
   flex-direction: column;
+  gap: 0.6rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  padding: 0;                 /* rimuovi padding interno fisso */
 }
 
 .componentCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.45);
 }
 
 .inactiveCard {
@@ -78,18 +79,18 @@
   opacity: 0.8;
 }
 
-/* --- TITOLO SOPRA --- */
 .componentTitle {
   font-size: 1.4rem;
   font-weight: 700;
   color: #00afff;
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-wrap: break-word;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-decoration: none;
+}
+
+.componentTitle:hover {
+  color: #38bdf8;
 }
 
 /* --- GRIGLIA CARD --- */
@@ -118,6 +119,8 @@
   height: 100%;
   object-fit: cover;
   border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
 .placeholder {
@@ -152,20 +155,25 @@
 .infoColumn {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.15rem; /* più compatto */
+  font-size: 0.9rem;
 }
 
-.infoRow {
-  margin: 0.0.5rem 0;
-  display: flex;
-  gap: 0.3rem;
+.infoColumn p {
+  margin: 0.1rem 0;
 }
-.label { font-weight: 600; color: #cbd5e1; }
-.value { color: #f1f5f9; }
+
+.label {
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.value {
+  color: #f1f5f9;
+}
 
 /* --- COLONNA 3: DESCRIZIONE --- */
 .descriptionColumn {
-  max-width: 400px;
   max-height: 220px;
   text-align: justify;
   word-wrap: break-word;
@@ -175,16 +183,75 @@
   font-size: 0.9rem;
   line-height: 1.4;
   color: #e2e8f0;
-  margin-top: 0.3rem;
+  margin: 0;
 }
 
-/* --- COLONNA 4: BADGES + TAG + PREZZI --- */
+.descriptionColumn .label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+/* --- COLONNA 4: PREZZI + TAG + BADGE + SELLER --- */
 .priceTagColumn {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: 0.2rem;
 }
+
+.categoryTagWrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.categoryTag {
+  text-align: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #fff;
+}
+
+/* --- COLORI TAG CATEGORIA (coerenti con home) --- */
+.tag-LOCATION {
+  background: linear-gradient(135deg, #FF6B6B, #FF006E);
+  color: #fff;
+}
+
+.tag-AUDIO {
+  background: linear-gradient(135deg, #007BFF, #00D4FF);
+  color: #fff;
+}
+
+.tag-LUCI {
+  background: linear-gradient(135deg, #FFD93D, #FFB347);
+  color: #1e293b;
+}
+
+.tag-PALCHI {
+  background: linear-gradient(135deg, #6A4C93, #8E44AD);
+  color: #fff;
+}
+
+.tag-ARTISTI {
+  background: linear-gradient(135deg, #FF8C42, #FF5E57);
+  color: #fff;
+}
+
+.tag-BUNDLE {
+  background: linear-gradient(135deg, #2ECC71, #00B894);
+  color: #fff;
+}
+
+.tag-ALTRO {
+  background: linear-gradient(135deg, #95A5A6, #7F8C8D);
+  color: #fff;
+}
+
 
 /* Contenitore badge sotto il tag */
 .badgesUnder {
