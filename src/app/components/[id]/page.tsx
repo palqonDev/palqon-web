@@ -93,10 +93,10 @@ const { data: comp } = await supabase
     peso, assorbimento, lunghezza, larghezza, altezza,
     brand, tipologia, controllo, quantita, materiale, console_modello, attrezzatura,
     city_name,
-    sellers!inner (
+    sellers!left (
       id,
       user_id,
-      users!inner (
+      users!left (
         id,
         name,
         avatar_url,
