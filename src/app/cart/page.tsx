@@ -111,17 +111,24 @@ export default function CartPage() {
     setCartItems((prev) => prev.filter((ci) => ci.id !== id))
   }
 
-// conferma checkout
+// conferma checkout (multi-component)
 const handleCheckout = async () => {
   try {
-    // 1. crea booking preliminare in Supabase
+    if (!cartItems.length) {
+      alert("Carrello vuoto.")
+      return
+    }
+
+    // 1️⃣ Crea prenotazione preliminare
+    const total = calculateCartTotal()
+
     const { data: booking, error: bookingError } = await supabase
       .from("bookings")
       .insert([
         {
           client_id: user.id,
-          seller_id: cartItems[0].component.seller_id, // supponiamo 1 seller
-          total_price: calculateCartTotal(),
+          seller_id: cartItems[0].component?.seller_id || null, // opzionale
+          total_price: total,
           date_start: cartItems[0].date_start,
           date_end: cartItems[0].date_end,
           status: "pending",
@@ -135,32 +142,58 @@ const handleCheckout = async () => {
       return
     }
 
-    // 2. chiedi al backend la Checkout Session
+    const bookingId = booking.id
+
+    // 2️⃣ Collega tutti i componenti del carrello a booking_components
+    const componentLinks = cartItems.map((item) => ({
+      booking_id: bookingId,
+      component_id: item.component_id,
+      quantity: item.quantity,
+    }))
+
+    const { error: linkError } = await supabase
+      .from("booking_components")
+      .insert(componentLinks)
+
+    if (linkError) {
+      console.error("Errore inserimento booking_components:", linkError)
+      alert("Errore creazione legami componenti: " + linkError.message)
+      return
+    }
+
+    // 3️⃣ Invia richiesta al backend per creare sessione Stripe
+    //    (invia il primo componentId come riferimento principale)
+    const componentId = cartItems[0].component_id
+
+    console.log("DEBUG checkout payload:", { bookingId, total, componentId })
+
     const res = await fetch("/api/checkout_sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        bookingId: booking.id,
-        amount: calculateCartTotal(),
+        bookingId,
+        amount: total,
+        componentId,
       }),
     })
 
     const data = await res.json()
     console.log("Checkout data:", data)
 
-    // 3. controllo se l'API ha restituito un URL valido
-    if (!data.url) {
+    if (!res.ok || !data.url) {
       alert("Errore checkout: " + JSON.stringify(data))
       return
     }
 
-    // 4. redirect a Stripe Checkout
+    // 4️⃣ Redirect a Stripe Checkout
     window.location.href = data.url
   } catch (error: any) {
     console.error("Errore generale nel checkout:", error)
     alert("Errore durante la procedura di checkout.")
   }
 }
+
+
 
 
 
