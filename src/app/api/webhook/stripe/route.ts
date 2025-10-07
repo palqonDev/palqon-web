@@ -3,25 +3,17 @@ import Stripe from "stripe"
 import { Readable } from "node:stream"
 import { createClient } from "@supabase/supabase-js"
 
-// 🚫 Disattiva il body parser di Next.js per ottenere il body RAW richiesto da Stripe
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
+export const config = { api: { bodyParser: false } }
 
-// ✅ Inizializza Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
 })
 
-// ✅ Inizializza client Supabase con chiave di servizio (serve per scrivere nel DB)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// 🔧 Helper per leggere il corpo grezzo della richiesta
 async function buffer(readable: Readable) {
   const chunks: any[] = []
   for await (const chunk of readable) {
@@ -30,19 +22,13 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks)
 }
 
-// 📦 Gestione POST (ricezione eventi Stripe)
 export async function POST(req: Request) {
   const sig = req.headers.get("stripe-signature")
-
-  if (!sig) {
-    console.error("❌ Nessuna firma Stripe trovata nell'header")
+  if (!sig)
     return NextResponse.json({ error: "Missing Stripe signature" }, { status: 400 })
-  }
 
   let event: Stripe.Event
-
   try {
-    // ✅ Legge il body grezzo e verifica la firma
     const buf = await buffer(req.body as unknown as Readable)
     event = stripe.webhooks.constructEvent(
       buf,
@@ -51,34 +37,37 @@ export async function POST(req: Request) {
     )
   } catch (err: any) {
     console.error("❌ Webhook signature verification failed:", err.message)
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
+    return NextResponse.json({ error: err.message }, { status: 400 })
   }
 
   try {
-    // ✅ Identifica l'evento Stripe
     const eventType = event.type
-    console.log("✅ Ricevuto evento Stripe:", eventType)
+    console.log("✅ Evento Stripe:", eventType)
 
     let bookingId: string | null = null
+    let componentId: string | null = null
 
-    // Legge bookingId da metadata della sessione o del payment intent
+    // ✅ Legge metadata (arrivano da checkout_sessions)
     if (eventType === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session
       bookingId = session.metadata?.bookingId || null
+      componentId = session.metadata?.componentId || null
     } else if (eventType === "payment_intent.succeeded") {
       const intent = event.data.object as Stripe.PaymentIntent
       bookingId = intent.metadata?.bookingId || null
+      componentId = intent.metadata?.componentId || null
     }
 
     console.log("📦 bookingId:", bookingId)
+    console.log("🎛 componentId:", componentId)
 
     if (!bookingId) {
       console.warn("⚠️ Nessun bookingId presente nei metadata")
       return NextResponse.json({ received: true })
     }
 
-    // ✅ Aggiorna la prenotazione in Supabase
-    const { error } = await supabaseAdmin
+    // ✅ Aggiorna la prenotazione come pagata
+    const { error: bookingUpdateError } = await supabaseAdmin
       .from("bookings")
       .update({
         status: "confirmed",
@@ -86,43 +75,58 @@ export async function POST(req: Request) {
       })
       .eq("id", bookingId)
 
-    if (error) {
-      console.error("❌ Errore aggiornamento booking:", error.message)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (bookingUpdateError) {
+      console.error("❌ Errore aggiornamento booking:", bookingUpdateError.message)
+      return NextResponse.json({ error: bookingUpdateError.message }, { status: 500 })
     }
 
-    console.log("✅ Booking aggiornato a 'confirmed' e 'paid' con successo")
+    console.log("✅ Booking aggiornato a 'confirmed' e 'paid'")
+
+    // ✅ Inserisce il componente collegato
+    if (componentId) {
+      const { error: insertError } = await supabaseAdmin
+        .from("booking_components")
+        .insert([
+          {
+            booking_id: bookingId,
+            component_id: componentId,
+            quantity: 1,
+          },
+        ])
+
+      if (insertError) {
+        console.error("❌ Errore inserimento booking_components:", insertError.message)
+      } else {
+        console.log("✅ booking_components inserito:", { bookingId, componentId })
+      }
+    } else {
+      console.warn("⚠️ Nessun componentId nei metadata, skip inserimento booking_components")
+    }
+
+    // ✅ Svuota il carrello dell’utente
+    const { data: bookingRow, error: bookingFetchError } = await supabaseAdmin
+      .from("bookings")
+      .select("client_id")
+      .eq("id", bookingId)
+      .single()
+
+    if (bookingFetchError) {
+      console.error("Errore recupero client_id:", bookingFetchError)
+    } else if (bookingRow?.client_id) {
+      const { error: cartError } = await supabaseAdmin
+        .from("cart_items")
+        .delete()
+        .eq("user_id", bookingRow.client_id)
+
+      if (cartError)
+        console.error("❌ Errore svuotamento carrello:", cartError.message)
+      else
+        console.log(`🧹 Carrello svuotato per user_id ${bookingRow.client_id}`)
+    }
 
     return NextResponse.json({ received: true })
   } catch (err: any) {
     console.error("❌ Errore nel webhook:", err.message)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
-
-    try {
-  const { data: bookingRow, error: bookingFetchError } = await supabaseAdmin
-    .from("bookings")
-    .select("client_id")
-    .eq("id", bookingId)
-    .single()
-
-  if (bookingFetchError) {
-    console.error("Errore recupero client_id per svuotare carrello:", bookingFetchError)
-  } else if (bookingRow?.client_id) {
-    const { error: cartError } = await supabaseAdmin
-      .from("cart_items")
-      .delete()
-      .eq("user_id", bookingRow.client_id)
-
-    if (cartError) {
-      console.error("❌ Errore svuotamento carrello:", cartError.message)
-    } else {
-      console.log(`🧹 Carrello svuotato per user_id ${bookingRow.client_id}`)
-    }
-  }
-} catch (cartClearError: any) {
-  console.error("Errore generico durante lo svuotamento del carrello:", cartClearError.message)
-}
-
-
 }
