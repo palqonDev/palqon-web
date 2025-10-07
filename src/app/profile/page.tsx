@@ -328,17 +328,18 @@ const { data: orders, error } = await supabase
     total_price,
     status,
     last_payment_status,
-    booking_components (
-      component_id,
-      components (
-        id,
-        name,
-        images
-      )
-    )
+booking_components (
+  booking_id,
+  components (
+    id,
+    name,
+    images
+  )
+)
+
   `)
   .eq("client_id", clientId)
-  .or("(status.eq.confirmed,last_payment_status.eq.paid)")
+  .or(`(status.eq.confirmed.and(client_id.eq.${clientId}),last_payment_status.eq.paid.and(client_id.eq.${clientId}))`)
   .order("created_at", { ascending: false })
 
 if (error) console.error("Errore fetchClientData:", error)
