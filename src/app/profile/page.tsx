@@ -318,7 +318,7 @@ setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 
 
   const fetchClientData = async (clientId: string) => {
   // prenotazioni come CLIENT
-  const { data: orders, error } = await supabase
+const { data: orders, error } = await supabase
   .from("bookings")
   .select(`
     id,
@@ -327,7 +327,14 @@ setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 
     total_price,
     status,
     last_payment_status,
-    components:booking_components(component_id, components(name, images))
+    booking_components (
+      component_id,
+      components (
+        id,
+        name,
+        images
+      )
+    )
   `)
   .eq("client_id", clientId)
   .eq("last_payment_status", "paid") // solo pagati
@@ -335,6 +342,7 @@ setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 
 
 if (error) console.error(error)
 setMyOrders(orders || [])
+
 
 
 
@@ -550,48 +558,39 @@ const isSellerDataComplete = () => {
 {/* Le mie prenotazioni */}
 <section className={styles.block}>
   <h3>Le mie prenotazioni</h3>
-  {myOrders.length > 0 ? (
+
+  {myOrders?.length ? (
     <ul className={styles.ordersList}>
-      {myOrders.map((o) => {
-        const component = o.components?.[0]?.components
+      {myOrders.map((order) => {
+        const component = order.booking_components?.[0]?.components
+        if (!component) return null
+
         return (
-          <li key={o.id} className={styles.orderCard}>
-            <Link href={`/components/${component?.id || ""}`} className={styles.orderLink}>
+          <li key={order.id} className={styles.orderCard}>
+            <Link href={`/components/${component.id}`} className={styles.orderLink}>
               <div className={styles.orderMain}>
                 <div className={styles.orderHeader}>
-                  <span className={styles.componentName}>
-                    {component?.name || "Componente"}
-                  </span>
+                  <span className={styles.componentName}>{component.name}</span>
                   <span
                     className={`${styles.badgeStatus} ${
-                      o.last_payment_status === "paid"
+                      order.last_payment_status === "paid"
                         ? styles.badgePaid
-                        : o.status === "pending"
-                        ? styles.badgePending
-                        : styles.badgeDefault
+                        : styles.badgePending
                     }`}
                   >
-                    {o.last_payment_status === "paid"
-                      ? "Pagato"
-                      : o.status === "pending"
-                      ? "In attesa"
-                      : o.status === "confirmed"
-                      ? "Confermato"
-                      : o.status}
+                    {order.last_payment_status === "paid" ? "Pagato" : "In attesa"}
                   </span>
                 </div>
-
                 <div className={styles.orderMeta}>
-                  {new Date(o.date_start).toLocaleDateString("it-IT")} →
-                  {new Date(o.date_end).toLocaleDateString("it-IT")}
+                  {new Date(order.date_start).toLocaleDateString("it-IT")} →
+                  {new Date(order.date_end).toLocaleDateString("it-IT")}
                 </div>
-
                 <div className={styles.orderAmount}>
-                  € {Number(o.total_price || 0).toFixed(2)}
+                  € {Number(order.total_price).toFixed(2)}
                 </div>
               </div>
 
-              {component?.images?.[0] && (
+              {component.images?.[0] && (
                 <img
                   src={component.images[0]}
                   alt={component.name}
@@ -604,9 +603,10 @@ const isSellerDataComplete = () => {
       })}
     </ul>
   ) : (
-    <p>Nessuna prenotazione completata.</p>
+    <p>Nessuna prenotazione trovata.</p>
   )}
 </section>
+
 
 
         {/* Le mie recensioni */}
@@ -727,20 +727,6 @@ const isSellerDataComplete = () => {
   </form>
 </section>
 
-
-        {/* Metodo di pagamento */}
-        <section className={styles.block}>
-          <h3>Metodo di pagamento</h3>
-          {user.card_last4 ? (
-            <p className={styles.payBox}>
-              Carta salvata: {user.card_brand?.toUpperCase() || "CARD"} •••• {user.card_last4}
-            </p>
-          ) : (
-            <p className={styles.payBox}>
-              Nessuna carta salvata. <a href="/billing">Aggiungi carta</a>
-            </p>
-          )}
-        </section>
 
         {/* Notifiche e account */}
         <section className={styles.block}>

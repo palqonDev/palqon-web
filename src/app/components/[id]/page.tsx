@@ -131,18 +131,37 @@ const { data: comp } = await supabase
         }
       }
 
-// Recupera le prenotazioni confermate o già pagate per bloccare il calendario
-const { data: bookingsData, error: bookingsError } = await supabase
-  .from("bookings")
-  .select("id, date_start, date_end, status, last_payment_status")
+// ✅ Recupera tutte le prenotazioni che includono questo componente e sono confermate o pagate
+const { data: bookingComponents, error: joinError } = await supabase
+  .from("booking_components")
+  .select(`
+    booking_id,
+    bookings (
+      id,
+      date_start,
+      date_end,
+      status,
+      last_payment_status
+    )
+  `)
   .eq("component_id", id)
-  .or("status.eq.confirmed,last_payment_status.eq.paid")
 
-if (bookingsError) {
-  console.error("Errore caricamento prenotazioni:", bookingsError)
+if (joinError) {
+  console.error("Errore join booking_components → bookings:", joinError)
 }
 
-setBookings(bookingsData || [])
+// Filtra solo le prenotazioni confermate o già pagate
+const filteredBookings =
+  bookingComponents
+    ?.map((b) => b.bookings)
+    ?.filter(
+      (bk) =>
+        bk &&
+        (bk.status === "confirmed" || bk.last_payment_status === "paid")
+    ) || []
+
+setBookings(filteredBookings)
+
 
 
       // availability
