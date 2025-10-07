@@ -316,45 +316,57 @@ setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 
     setReviews(reviewsData?.slice(0, 3) || [])
   }
 
-  const fetchClientData = async (clientId: string) => {
-  // prenotazioni come CLIENT
-const { data: orders, error } = await supabase
-  .from("bookings")
-  .select(`
-    id,
-    client_id,
-    date_start,
-    date_end,
-    total_price,
-    status,
-    last_payment_status,
-booking_components (
-  booking_id,
-  components (
-    id,
-    name,
-    images
-  )
-)
+const fetchClientData = async (clientId: string) => {
+  // 🔹 Fetch prenotazioni del cliente con componenti collegati
+  const { data: orders, error } = await supabase
+    .from("bookings")
+    .select(`
+      id,
+      client_id,
+      date_start,
+      date_end,
+      total_price,
+      status,
+      last_payment_status,
+      booking_components (
+        booking_id,
+        components (
+          id,
+          name,
+          images
+        )
+      )
+    `)
+    .eq("client_id", clientId)
+    .in("status", ["confirmed", "pending"]) // include confermate o ancora attive
+    .order("created_at", { ascending: false })
 
-  `)
-  .eq("client_id", clientId)
-  .or(`(status.eq.confirmed.and(client_id.eq.${clientId}),last_payment_status.eq.paid.and(client_id.eq.${clientId}))`)
-  .order("created_at", { ascending: false })
+  if (error) {
+    console.error("Errore fetchClientData:", error)
+    return
+  }
 
-if (error) console.error("Errore fetchClientData:", error)
-setMyOrders(orders || [])
+  console.log("📦 ORDERS:", orders)
 
+  // 🔹 Mostra solo prenotazioni confermate o pagate
+  const visibleOrders =
+    orders?.filter(
+      (o) =>
+        o.status === "confirmed" || o.last_payment_status === "paid"
+    ) || []
 
+  setMyOrders(visibleOrders)
 
-
-
-  // spesa totale e attive
+  // 🔹 Calcolo totali e conteggi
   const totalSpent =
-    orders?.reduce((s, o) => s + (Number(o.total_price) || 0), 0) || 0
-  const activeCount = orders?.filter(o => o.status === "active" || o.status === "paid")?.length || 0
+    visibleOrders.reduce((s, o) => s + (Number(o.total_price) || 0), 0) || 0
 
-  // recensioni lasciate come CLIENT
+  const activeCount =
+    visibleOrders.filter(
+      (o) => o.status === "confirmed" || o.last_payment_status === "paid"
+    ).length || 0
+
+  // 🔹 Recensioni lasciate come CLIENT
   const { data: given } = await supabase
     .from("reviews")
     .select("rating, comment, created_at")
@@ -363,8 +375,13 @@ setMyOrders(orders || [])
     .limit(5)
 
   setMyGivenReviews(given || [])
-  setClientStats({ active: activeCount, spent: totalSpent, reviews: given?.length || 0 })
+  setClientStats({
+    active: activeCount,
+    spent: totalSpent,
+    reviews: given?.length || 0,
+  })
 }
+
 
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
