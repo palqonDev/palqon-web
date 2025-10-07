@@ -582,15 +582,52 @@ const isSellerDataComplete = () => {
   {myOrders?.length ? (
     <ul className={styles.ordersList}>
       {myOrders.map((order) => {
-        const component = order.booking_components?.[0]?.components
-        if (!component) return null
+        // Estrai il primo componente associato alla prenotazione
+        const component =
+          order.booking_components?.length > 0
+            ? order.booking_components[0].components
+            : null
+
+        if (!component) {
+          console.warn("Booking senza componenti:", order.id)
+          return (
+            <li key={order.id} className={styles.orderCard}>
+              <div className={styles.orderMain}>
+                <div className={styles.orderHeader}>
+                  <span className={styles.componentName}>
+                    Componente non disponibile
+                  </span>
+                  <span
+                    className={`${styles.badgeStatus} ${styles.badgePending}`}
+                  >
+                    {order.last_payment_status === "paid"
+                      ? "Pagato"
+                      : "In attesa"}
+                  </span>
+                </div>
+                <div className={styles.orderMeta}>
+                  {new Date(order.date_start).toLocaleDateString("it-IT")} →
+                  {new Date(order.date_end).toLocaleDateString("it-IT")}
+                </div>
+                <div className={styles.orderAmount}>
+                  € {Number(order.total_price).toFixed(2)}
+                </div>
+              </div>
+            </li>
+          )
+        }
 
         return (
           <li key={order.id} className={styles.orderCard}>
-            <Link href={`/components/${component.id}`} className={styles.orderLink}>
+            <Link
+              href={`/components/${component.id}`}
+              className={styles.orderLink}
+            >
               <div className={styles.orderMain}>
                 <div className={styles.orderHeader}>
-                  <span className={styles.componentName}>{component.name}</span>
+                  <span className={styles.componentName}>
+                    {component.name}
+                  </span>
                   <span
                     className={`${styles.badgeStatus} ${
                       order.last_payment_status === "paid"
@@ -598,7 +635,9 @@ const isSellerDataComplete = () => {
                         : styles.badgePending
                     }`}
                   >
-                    {order.last_payment_status === "paid" ? "Pagato" : "In attesa"}
+                    {order.last_payment_status === "paid"
+                      ? "Pagato"
+                      : "In attesa"}
                   </span>
                 </div>
                 <div className={styles.orderMeta}>
@@ -626,6 +665,7 @@ const isSellerDataComplete = () => {
     <p>Nessuna prenotazione trovata.</p>
   )}
 </section>
+
 
 
 
