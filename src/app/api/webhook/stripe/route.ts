@@ -98,4 +98,31 @@ export async function POST(req: Request) {
     console.error("❌ Errore nel webhook:", err.message)
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
+
+    try {
+  const { data: bookingRow, error: bookingFetchError } = await supabaseAdmin
+    .from("bookings")
+    .select("client_id")
+    .eq("id", bookingId)
+    .single()
+
+  if (bookingFetchError) {
+    console.error("Errore recupero client_id per svuotare carrello:", bookingFetchError)
+  } else if (bookingRow?.client_id) {
+    const { error: cartError } = await supabaseAdmin
+      .from("cart_items")
+      .delete()
+      .eq("user_id", bookingRow.client_id)
+
+    if (cartError) {
+      console.error("❌ Errore svuotamento carrello:", cartError.message)
+    } else {
+      console.log(`🧹 Carrello svuotato per user_id ${bookingRow.client_id}`)
+    }
+  }
+} catch (cartClearError: any) {
+  console.error("Errore generico durante lo svuotamento del carrello:", cartClearError.message)
+}
+
+
 }

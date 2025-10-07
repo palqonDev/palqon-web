@@ -322,12 +322,13 @@ const { data: orders, error } = await supabase
   .from("bookings")
   .select(`
     id,
+    client_id,
     date_start,
     date_end,
     total_price,
     status,
     last_payment_status,
-    booking_components (
+    booking_components:booking_components (
       component_id,
       components (
         id,
@@ -337,8 +338,9 @@ const { data: orders, error } = await supabase
     )
   `)
   .eq("client_id", clientId)
-  .eq("last_payment_status", "paid") // solo pagati
+  .or("status.eq.confirmed,last_payment_status.eq.paid")
   .order("created_at", { ascending: false })
+
 
 if (error) console.error(error)
 setMyOrders(orders || [])
