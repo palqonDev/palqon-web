@@ -131,7 +131,15 @@ const { data: comp } = await supabase
         }
       }
 
-// ✅ Recupera tutte le prenotazioni che includono questo componente e sono confermate o pagate
+// ✅ Recupera tutte le prenotazioni che includono questo componente
+type BookingRecord = {
+  id: string
+  date_start: string
+  date_end: string
+  status: string
+  last_payment_status: string
+}
+
 const { data: bookingComponents, error: joinError } = await supabase
   .from("booking_components")
   .select(`
@@ -150,17 +158,18 @@ if (joinError) {
   console.error("Errore join booking_components → bookings:", joinError)
 }
 
-// Filtra solo le prenotazioni confermate o già pagate
-const filteredBookings =
-  bookingComponents
-    ?.map((b) => b.bookings)
-    ?.filter(
+// ✅ Filtra solo prenotazioni confermate o pagate
+const filteredBookings: BookingRecord[] =
+  (bookingComponents || [])
+    .map((b) => b.bookings as BookingRecord)
+    .filter(
       (bk) =>
         bk &&
         (bk.status === "confirmed" || bk.last_payment_status === "paid")
-    ) || []
+    )
 
 setBookings(filteredBookings)
+
 
 
 
