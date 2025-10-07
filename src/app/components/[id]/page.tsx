@@ -158,15 +158,18 @@ if (joinError) {
   console.error("Errore join booking_components → bookings:", joinError)
 }
 
-// ✅ Filtra solo prenotazioni confermate o pagate
+// ✅ Correzione: includi anche booking confermati o pagati con data valida
 const filteredBookings: BookingRecord[] =
   (bookingComponents || [])
     .map((b) => b.bookings as BookingRecord)
     .filter(
       (bk) =>
         bk &&
-        (bk.status === "confirmed" || bk.last_payment_status === "paid")
+        (["confirmed", "pending"].includes(bk.status) ||
+          bk.last_payment_status === "paid") &&
+        new Date(bk.date_end) >= new Date() // esclude prenotazioni passate
     )
+
 
 setBookings(filteredBookings)
 
