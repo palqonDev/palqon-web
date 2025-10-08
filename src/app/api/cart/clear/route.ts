@@ -8,12 +8,15 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   const { userId } = await req.json()
-  if (!userId) return NextResponse.json({ error: "userId mancante" }, { status: 400 })
+
+  if (!userId) {
+    return NextResponse.json({ error: "userId mancante" }, { status: 400 })
+  }
 
   const { error } = await supabase.from("cart_items").delete().eq("user_id", userId)
 
   if (error) {
-    console.error("Errore svuotamento carrello:", error)
+    console.error("❌ Errore svuotamento carrello:", error.message)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
