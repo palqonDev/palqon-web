@@ -252,31 +252,76 @@ const tileDisabled = ({ date }: { date: Date }) => {
 }
 
 
-  // aggiungi al carrello
-  const handleAddToCart = async () => {
-    if (!user) {
-      alert("Devi effettuare il login per aggiungere al carrello.")
-      return
-    }
-    if (!selectedRange) {
-      alert("Seleziona le date.")
-      return
-    }
+// ✅ Aggiungi al carrello
+const handleAddToCart = async () => {
+  if (!user) {
+    alert("Devi effettuare il login per aggiungere al carrello.")
+    return
+  }
+  if (!selectedRange) {
+    alert("Seleziona le date.")
+    return
+  }
 
-    const { data, error } = await supabase.rpc("add_to_cart", {
-      p_user_id: user.id,
-      p_component_id: component?.id,
-      p_date_start: selectedRange[0].toISOString(),
-      p_date_end: selectedRange[1].toISOString(),
-    })
+  const dateStart = selectedRange[0].toISOString()
+  const dateEnd = selectedRange[1].toISOString()
 
-    if (error) {
-      alert(error.message)
+  // controlla se esiste già stesso componente + stesse date
+  const { data: existing, error: selectError } = await supabase
+    .from("cart_items")
+    .select("id, quantity")
+    .eq("user_id", user.id)
+    .eq("component_id", component?.id)
+    .eq("date_start", dateStart)
+    .eq("date_end", dateEnd)
+    .maybeSingle()
+
+  if (selectError) {
+    console.error("Errore controllo duplicati:", selectError)
+    alert("Errore durante il controllo del carrello.")
+    return
+  }
+
+  if (existing) {
+    // se già presente, aggiorna quantità
+    const { error: updateError } = await supabase
+      .from("cart_items")
+      .update({
+        quantity: existing.quantity + 1,
+        expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // rinnova scadenza di 1h
+      })
+      .eq("id", existing.id)
+
+    if (updateError) {
+      console.error("Errore update quantità:", updateError)
+      alert("Errore aggiornamento quantità.")
     } else {
-      const event = new CustomEvent("cart:add")
-      window.dispatchEvent(event)
+      alert("Quantità aggiornata nel carrello!")
+      window.dispatchEvent(new CustomEvent("cart:add"))
+    }
+  } else {
+    // se non presente, inserisci nuovo record
+    const { error: insertError } = await supabase.from("cart_items").insert([
+      {
+        user_id: user.id,
+        component_id: component?.id,
+        date_start: dateStart,
+        date_end: dateEnd,
+        quantity: 1,
+        expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+      },
+    ])
+
+    if (insertError) {
+      console.error("Errore inserimento carrello:", insertError)
+      alert("Errore aggiunta al carrello.")
+    } else {
+      alert("Aggiunto al carrello!")
+      window.dispatchEvent(new CustomEvent("cart:add"))
     }
   }
+}
+
 
   if (loading) return <p className={styles.container}>Caricamento...</p>
   if (!component) return <p className={styles.container}>Componente non trovato.</p>
