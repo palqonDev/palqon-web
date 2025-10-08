@@ -9,41 +9,49 @@ export default function SuccessContent() {
   const searchParams = useSearchParams()
   const bookingId = searchParams.get("booking")
   const supabase = createClientComponentClient()
-
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
-  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUserId(data?.user?.id || null)
-    }
-    getUser()
-  }, [])
-
-  useEffect(() => {
-    if (!bookingId || !userId) return
-
     const confirmAndClear = async () => {
       try {
-        await fetch("/api/bookings/confirm", {
+        console.log("✅ Booking ID ricevuto:", bookingId)
+        if (!bookingId) throw new Error("Booking ID mancante")
+
+        const { data } = await supabase.auth.getUser()
+        const userId = data?.user?.id
+        console.log("✅ User ID:", userId)
+
+        if (!userId) throw new Error("Utente non autenticato")
+
+        // conferma prenotazione
+        const confirmRes = await fetch("/api/bookings/confirm", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ bookingId }),
         })
-        await fetch("/api/cart/clear", {
+
+        console.log("🔄 Risposta conferma:", confirmRes.status)
+
+        // svuota carrello
+        const clearRes = await fetch("/api/cart/clear", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userId }),
         })
+
+        console.log("🧹 Risposta clear:", clearRes.status)
+
+        if (!confirmRes.ok || !clearRes.ok) throw new Error("Errore backend")
+
         setStatus("success")
-      } catch {
+      } catch (err) {
+        console.error("❌ Errore:", err)
         setStatus("error")
       }
     }
 
     confirmAndClear()
-  }, [bookingId, userId])
+  }, [bookingId])
 
   if (status === "loading") return <p>Conferma del pagamento in corso...</p>
 
@@ -62,7 +70,9 @@ export default function SuccessContent() {
     <div className="text-center">
       <h1 className="text-3xl font-bold text-green-500 mb-3">Pagamento completato!</h1>
       <p>La tua prenotazione è stata confermata e il carrello svuotato.</p>
-      <Link href="/bookings" className="text-blue-500 underline">Vai alle mie prenotazioni</Link>
+      <Link href="/profile" className="text-blue-500 underline">
+        Vai al tuo profilo
+      </Link>
     </div>
   )
 }
