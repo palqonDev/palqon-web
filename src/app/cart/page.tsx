@@ -25,12 +25,16 @@ type CartItem = {
   }
 }
 
+
+
 export default function CartPage() {
   const router = useRouter()
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [now, setNow] = useState(Date.now())
+  const [loadingCheckout, setLoadingCheckout] = useState(false)
+
 
   // fetch carrello
   useEffect(() => {
@@ -113,6 +117,8 @@ export default function CartPage() {
 
 // conferma checkout (multi-component)
 const handleCheckout = async () => {
+  if (loadingCheckout) return // ✅ evita doppie esecuzioni
+  setLoadingCheckout(true)
   try {
     if (!cartItems.length) {
       alert("Carrello vuoto.")
@@ -176,6 +182,12 @@ for (const link of componentLinks) {
       return
     }
   }
+
+  
+
+
+
+
 }
 
 
@@ -209,6 +221,11 @@ for (const link of componentLinks) {
     console.error("Errore generale nel checkout:", error)
     alert("Errore durante la procedura di checkout.")
   }
+
+
+
+
+
 }
 
 
@@ -303,9 +320,14 @@ for (const link of componentLinks) {
   Continua gli acquisti
 </Link>
 
-          <button className={styles.checkoutBtn} onClick={handleCheckout}>
-            Procedi al checkout
-          </button>
+<button
+  className={styles.checkoutBtn}
+  onClick={handleCheckout}
+  disabled={loadingCheckout}
+>
+  {loadingCheckout ? "Elaborazione..." : "Procedi al checkout"}
+</button>
+
         </div>
       </div>
     </div>
