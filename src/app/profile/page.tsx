@@ -317,7 +317,6 @@ setTotalReceived(received?.reduce((sum, b) => sum + (b.total_price || 0), 0) || 
   }
 
 const fetchClientData = async (clientId: string) => {
-  // 🔹 Fetch prenotazioni del cliente con componenti collegati
   const { data: orders, error } = await supabase
     .from("bookings")
     .select(`
@@ -328,9 +327,9 @@ const fetchClientData = async (clientId: string) => {
       total_price,
       status,
       last_payment_status,
-      booking_components (
-        booking_id,
-        components (
+      booking_components:booking_components (
+        component_id,
+        components:components (
           id,
           name,
           images
@@ -338,7 +337,7 @@ const fetchClientData = async (clientId: string) => {
       )
     `)
     .eq("client_id", clientId)
-    .in("status", ["confirmed", "pending"]) // include confermate o ancora attive
+    .in("status", ["confirmed", "pending"])
     .order("created_at", { ascending: false })
 
   if (error) {
@@ -348,7 +347,6 @@ const fetchClientData = async (clientId: string) => {
 
   console.log("📦 ORDERS:", orders)
 
-  // 🔹 Mostra solo prenotazioni confermate o pagate
   const visibleOrders =
     orders?.filter(
       (o) =>
@@ -357,7 +355,7 @@ const fetchClientData = async (clientId: string) => {
 
   setMyOrders(visibleOrders)
 
-  // 🔹 Calcolo totali e conteggi
+  // Totali e statistiche cliente
   const totalSpent =
     visibleOrders.reduce((s, o) => s + (Number(o.total_price) || 0), 0) || 0
 
@@ -366,7 +364,6 @@ const fetchClientData = async (clientId: string) => {
       (o) => o.status === "confirmed" || o.last_payment_status === "paid"
     ).length || 0
 
-  // 🔹 Recensioni lasciate come CLIENT
   const { data: given } = await supabase
     .from("reviews")
     .select("rating, comment, created_at")
@@ -381,6 +378,7 @@ const fetchClientData = async (clientId: string) => {
     reviews: given?.length || 0,
   })
 }
+
 
 
 
@@ -581,90 +579,83 @@ const isSellerDataComplete = () => {
 
   {myOrders?.length ? (
     <ul className={styles.ordersList}>
-      {myOrders.map((order) => {
-        // Estrai il primo componente associato alla prenotazione
-        const component =
-          order.booking_components?.length > 0
-            ? order.booking_components[0].components
-            : null
+      {myOrders.map((order) =>
+        order.booking_components?.map((bc: any) => {
+          const comp = bc.components
+          if (!comp) {
+            console.warn("Booking senza componenti:", order.id)
+            return (
+              <li key={`${order.id}-empty`} className={styles.orderCard}>
+                <div className={styles.orderMain}>
+                  <div className={styles.orderHeader}>
+                    <span className={styles.componentName}>
+                      Componente non disponibile
+                    </span>
+                    <span
+                      className={`${styles.badgeStatus} ${styles.badgePending}`}
+                    >
+                      {order.last_payment_status === "paid"
+                        ? "Pagato"
+                        : "In attesa"}
+                    </span>
+                  </div>
+                  <div className={styles.orderMeta}>
+                    {new Date(order.date_start).toLocaleDateString("it-IT")} →
+                    {new Date(order.date_end).toLocaleDateString("it-IT")}
+                  </div>
+                  <div className={styles.orderAmount}>
+                    € {Number(order.total_price).toFixed(2)}
+                  </div>
+                </div>
+              </li>
+            )
+          }
 
-        if (!component) {
-          console.warn("Booking senza componenti:", order.id)
           return (
-            <li key={order.id} className={styles.orderCard}>
-              <div className={styles.orderMain}>
-                <div className={styles.orderHeader}>
-                  <span className={styles.componentName}>
-                    Componente non disponibile
-                  </span>
-                  <span
-                    className={`${styles.badgeStatus} ${styles.badgePending}`}
-                  >
-                    {order.last_payment_status === "paid"
-                      ? "Pagato"
-                      : "In attesa"}
-                  </span>
+            <li key={`${order.id}-${comp.id}`} className={styles.orderCard}>
+              <Link href={`/components/${comp.id}`} className={styles.orderLink}>
+                <div className={styles.orderMain}>
+                  <div className={styles.orderHeader}>
+                    <span className={styles.componentName}>{comp.name}</span>
+                    <span
+                      className={`${styles.badgeStatus} ${
+                        order.last_payment_status === "paid"
+                          ? styles.badgePaid
+                          : styles.badgePending
+                      }`}
+                    >
+                      {order.last_payment_status === "paid"
+                        ? "Pagato"
+                        : "In attesa"}
+                    </span>
+                  </div>
+                  <div className={styles.orderMeta}>
+                    {new Date(order.date_start).toLocaleDateString("it-IT")} →
+                    {new Date(order.date_end).toLocaleDateString("it-IT")}
+                  </div>
+                  <div className={styles.orderAmount}>
+                    € {Number(order.total_price).toFixed(2)}
+                  </div>
                 </div>
-                <div className={styles.orderMeta}>
-                  {new Date(order.date_start).toLocaleDateString("it-IT")} →
-                  {new Date(order.date_end).toLocaleDateString("it-IT")}
-                </div>
-                <div className={styles.orderAmount}>
-                  € {Number(order.total_price).toFixed(2)}
-                </div>
-              </div>
+
+                {comp.images?.[0] && (
+                  <img
+                    src={comp.images[0]}
+                    alt={comp.name}
+                    className={styles.orderImage}
+                  />
+                )}
+              </Link>
             </li>
           )
-        }
-
-        return (
-          <li key={order.id} className={styles.orderCard}>
-            <Link
-              href={`/components/${component.id}`}
-              className={styles.orderLink}
-            >
-              <div className={styles.orderMain}>
-                <div className={styles.orderHeader}>
-                  <span className={styles.componentName}>
-                    {component.name}
-                  </span>
-                  <span
-                    className={`${styles.badgeStatus} ${
-                      order.last_payment_status === "paid"
-                        ? styles.badgePaid
-                        : styles.badgePending
-                    }`}
-                  >
-                    {order.last_payment_status === "paid"
-                      ? "Pagato"
-                      : "In attesa"}
-                  </span>
-                </div>
-                <div className={styles.orderMeta}>
-                  {new Date(order.date_start).toLocaleDateString("it-IT")} →
-                  {new Date(order.date_end).toLocaleDateString("it-IT")}
-                </div>
-                <div className={styles.orderAmount}>
-                  € {Number(order.total_price).toFixed(2)}
-                </div>
-              </div>
-
-              {component.images?.[0] && (
-                <img
-                  src={component.images[0]}
-                  alt={component.name}
-                  className={styles.orderImage}
-                />
-              )}
-            </Link>
-          </li>
-        )
-      })}
+        })
+      )}
     </ul>
   ) : (
     <p>Nessuna prenotazione trovata.</p>
   )}
 </section>
+
 
 
 
