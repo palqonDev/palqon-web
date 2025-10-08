@@ -115,17 +115,19 @@ export default function CartPage() {
     setCartItems((prev) => prev.filter((ci) => ci.id !== id))
   }
 
-// conferma checkout (multi-component)
+// ✅ Checkout sicuro, senza duplicati né chiamate multiple
 const handleCheckout = async () => {
-  if (loadingCheckout) return // ✅ evita doppie esecuzioni
+  if (window.__checkoutLock) return
+  window.__checkoutLock = true
   setLoadingCheckout(true)
+
   try {
     if (!cartItems.length) {
       alert("Carrello vuoto.")
       return
     }
 
-    // 1️⃣ Crea prenotazione preliminare
+    // 1️⃣ Crea una sola prenotazione
     const total = calculateCartTotal()
 
     const { data: booking, error: bookingError } = await supabase
@@ -133,7 +135,7 @@ const handleCheckout = async () => {
       .insert([
         {
           client_id: user.id,
-          seller_id: cartItems[0].component?.seller_id || null, // opzionale
+          seller_id: cartItems[0].component?.seller_id || null,
           total_price: total,
           date_start: cartItems[0].date_start,
           date_end: cartItems[0].date_end,
@@ -148,87 +150,60 @@ const handleCheckout = async () => {
       return
     }
 
-    const bookingId = booking.id
+    console.log("✅ Booking creato:", booking.id)
 
-// 2️⃣ Collega i componenti del carrello senza duplicati
-const uniqueItems = Array.from(
-  new Map(
-    cartItems.map((item) => [`${item.component_id}-${item.date_start}-${item.date_end}`, item])
-  ).values()
-)
+    // 2️⃣ Collega solo componenti unici (evita tripli insert)
+    const uniqueComponents = [
+      ...new Map(
+        cartItems.map((item) => [item.component_id, item])
+      ).values(),
+    ]
 
-const componentLinks = uniqueItems.map((item) => ({
-  booking_id: bookingId,
-  component_id: item.component_id,
-  quantity: item.quantity,
-}))
+    const componentLinks = uniqueComponents.map((item) => ({
+      booking_id: booking.id,
+      component_id: item.component_id,
+      quantity: item.quantity,
+    }))
 
-for (const link of componentLinks) {
-  const { data: existing } = await supabase
-    .from("booking_components")
-    .select("id")
-    .eq("booking_id", bookingId)
-    .eq("component_id", link.component_id)
-    .maybeSingle()
-
-  if (!existing) {
-    const { error: insertError } = await supabase
+    const { error: linkError } = await supabase
       .from("booking_components")
-      .insert([link])
+      .insert(componentLinks)
 
-    if (insertError) {
-      console.error("Errore inserimento booking_components:", insertError)
-      alert("Errore creazione legami componenti: " + insertError.message)
+    if (linkError) {
+      console.error("Errore inserimento booking_components:", linkError)
+      alert("Errore legami componenti: " + linkError.message)
       return
     }
-  }
 
-  
+    console.log("📎 Inseriti componenti:", componentLinks.length)
 
-
-
-
-}
-
-
-    // 3️⃣ Invia richiesta al backend per creare sessione Stripe
-    //    (invia il primo componentId come riferimento principale)
-    const componentId = cartItems[0].component_id
-
-    console.log("DEBUG checkout payload:", { bookingId, total, componentId })
-
+    // 3️⃣ Crea sessione di pagamento Stripe
     const res = await fetch("/api/checkout_sessions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        bookingId,
+        bookingId: booking.id,
         amount: total,
-        componentId,
       }),
     })
 
     const data = await res.json()
-    console.log("Checkout data:", data)
 
     if (!res.ok || !data.url) {
       alert("Errore checkout: " + JSON.stringify(data))
       return
     }
 
-    // 4️⃣ Redirect a Stripe Checkout
+    // 4️⃣ Reindirizza a Stripe Checkout
     window.location.href = data.url
-  } catch (error: any) {
-    console.error("Errore generale nel checkout:", error)
+  } catch (err) {
+    console.error("❌ Errore generale nel checkout:", err)
     alert("Errore durante la procedura di checkout.")
+  } finally {
+    window.__checkoutLock = false
+    setLoadingCheckout(false)
   }
-
-
-
-
-
 }
-
-
 
 
 
