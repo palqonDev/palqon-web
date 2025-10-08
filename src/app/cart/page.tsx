@@ -144,22 +144,40 @@ const handleCheckout = async () => {
 
     const bookingId = booking.id
 
-    // 2️⃣ Collega tutti i componenti del carrello a booking_components
-    const componentLinks = cartItems.map((item) => ({
-      booking_id: bookingId,
-      component_id: item.component_id,
-      quantity: item.quantity,
-    }))
+// 2️⃣ Collega i componenti del carrello senza duplicati
+const uniqueItems = Array.from(
+  new Map(
+    cartItems.map((item) => [`${item.component_id}-${item.date_start}-${item.date_end}`, item])
+  ).values()
+)
 
-    const { error: linkError } = await supabase
+const componentLinks = uniqueItems.map((item) => ({
+  booking_id: bookingId,
+  component_id: item.component_id,
+  quantity: item.quantity,
+}))
+
+for (const link of componentLinks) {
+  const { data: existing } = await supabase
+    .from("booking_components")
+    .select("id")
+    .eq("booking_id", bookingId)
+    .eq("component_id", link.component_id)
+    .maybeSingle()
+
+  if (!existing) {
+    const { error: insertError } = await supabase
       .from("booking_components")
-      .insert(componentLinks)
+      .insert([link])
 
-    if (linkError) {
-      console.error("Errore inserimento booking_components:", linkError)
-      alert("Errore creazione legami componenti: " + linkError.message)
+    if (insertError) {
+      console.error("Errore inserimento booking_components:", insertError)
+      alert("Errore creazione legami componenti: " + insertError.message)
       return
     }
+  }
+}
+
 
     // 3️⃣ Invia richiesta al backend per creare sessione Stripe
     //    (invia il primo componentId come riferimento principale)
